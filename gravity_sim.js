@@ -74,7 +74,7 @@ P.prototype = {
         this.size = 3;//this.origSize = random(10, 100);
         this.x = w/2;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = 1.2;//random(-0.1, 0.1);
+        this.vx = 0.04;//random(-0.1, 0.1);
         this.vy = 0;//random(-0.1, 0.1);
         this.mass = random(1, 10);
         this.speed = this.origSpeed = random(.01, .03);
@@ -102,7 +102,7 @@ P.prototype = {
 
         this.drawDir();
 
-        for (var i=0; i<10; i++) {
+        for (var i=0; i<100; i++) {
             this.update();
         }
     },
@@ -164,7 +164,7 @@ P.prototype = {
     calcGravity: function(target) {
         var dist = distance(this.x, this.y, target.x, target.y);
         // 万有引力公式
-        var force = this.mass * target.mass / (dist*dist) * 0.41;
+        var force = this.mass * target.mass / (dist*dist) * 0.000021;
         var g = new Acc(force);
         g.dir = this.calcRelativePos(target);
         //console.log(g);
@@ -217,7 +217,7 @@ P.prototype = {
 }
 
 function EternalStar() {
-    this.mass = 100;
+    this.mass = 2000;
     this.x = w / 2;
     this.y = h / 2;
 }
