@@ -5,9 +5,9 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 4;
+var maxParticles = 8;
 var particles = [];
-var eternals  = [];
+
 var hue = 183;
 
 
@@ -67,20 +67,16 @@ mouse.draw = function () {
 
 }
 function EternalStar() {
-    
 }
 P.prototype = {
     init: function() {
-        this.size = 3;//this.origSize = random(10, 100);
+        this.size = 1;//this.origSize = random(10, 100);
         this.x = w/2;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = 0.04;//random(-0.1, 0.1);
-        this.vy = 0;//random(-0.1, 0.1);
+        this.vx = (h/2+10)/(h/2-this.y)*0.014;//random(-0.04, 0.04);//0.04;//
+        this.vy = 0;//random(-0.04, 0.04);//
         this.mass = random(1, 10);
-        this.speed = this.origSpeed = random(.01, .03);
-        this.hue = hue;
-        //this.vx = 0;
-        //this.vy = 0;
+        this.hue = random(1, 16000000);//hue;
         this.oldx = 0;
         this.oldy = 0;
     },
@@ -90,17 +86,17 @@ P.prototype = {
 
         ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
         ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
-        ctx.shadowBlur = this.size * 2;
+        ctx.shadowBlur = this.size * 1;
         ctx.beginPath();
 
         ctx.moveTo(this.x, this.y);
         ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
 
         ctx.closePath();
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 1;
         ctx.stroke();
 
-        this.drawDir();
+        //this.drawDir();
 
         for (var i=0; i<100; i++) {
             this.update();
@@ -113,14 +109,6 @@ P.prototype = {
         //if (this.distanceFromMouse > 20)
         if (1)//(!this.checkBorder(w, h))
         {
-            //this.x += (mouse.x - this.x) * this.speed;
-            //this.y += (mouse.y - this.y) * this.speed;
-            //if (this.distanceFromMouse < mouse.size) {
-            //    //this.size += (0 - this.size) * this.speed;
-            //    this.speed += .01;
-            //} else {
-            //    //this.size += (this.origSize - this.size) * this.speed;
-            //}
             this.oldx = this.x;
             this.oldy = this.y;
             
@@ -175,7 +163,7 @@ P.prototype = {
         //console.log(particles);
         for (var i in particles) {
             target = particles[i];
-            if (target.index == this.index) {
+            if (target.id == this.id) {
                 continue;
             }
             var gtmp = this.calcGravity(target);
@@ -201,13 +189,13 @@ P.prototype = {
         
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
-        dirLen = 12;
+        dirLen = 8;
         var dirX = dirLen * Math.cos(this.dir);
         var dirY = dirLen * Math.sin(this.dir);
         ctx.lineTo(this.x*1.0+dirX, this.y*1.0+dirY);
 
         ctx.closePath();
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 0.5;
         ctx.stroke();
     },
     calcGravityCenter: function() {
@@ -216,12 +204,12 @@ P.prototype = {
     
 }
 
-function EternalStar() {
-    this.mass = 2000;
-    this.x = w / 2;
-    this.y = h / 2;
-}
-EternalStar.prototype = new P();
+//function EternalStar() {
+//    this.mass = 1600;
+//    this.x = w / 2;
+//    this.y = h / 2;
+//}
+//EternalStar.prototype = new P();
 
 mouse.move = function() {
     if (!distance(mouse.x, mouse.y, mouse.tx, mouse.ty) <= .1) {
@@ -249,8 +237,8 @@ mouse.mouseleave = function(e) {
 
 //window.addEventListener("mousemove", mouse.touches);
 //window.addEventListener("click", mouse.touches);
-window.addEventListener("touchstart", mouse.touches);
-window.addEventListener("touchmove", mouse.touches)
+//window.addEventListener("touchstart", mouse.touches);
+//window.addEventListener("touchmove", mouse.touches)
 
 //c.addEventListener("mouseleave", mouse.mouseleave)
 
@@ -260,16 +248,24 @@ window.addEventListener("resize", function() {
 });
 
 for (var i = 1; i <= maxParticles; i++) {
-    setTimeout(function() {
+    //setTimeout(function() {
         var p = new P();
-        p.index = particles.length;
+        p.id = particles.length;
         p.init();
         particles.push(p);
         //console.log(i);
-    }, i * 50);
+    //}, i * 50);
 }
 
-eternal = new EternalStar;
+eternal = new P();//new EternalStar();
+eternal.init();
+eternal.id = particles.length;
+eternal.mass = 1800;
+eternal.x = w/2;
+eternal.y = h/2;
+// push 了就报错
+//particles.push(eternal);
+
 
 function anim() {
     ctx.fillStyle = clearColor;
@@ -284,6 +280,7 @@ function anim() {
         p.draw();
     }
     hue++;
+    hue %= 16000000;
     mouse.draw();
     requestAnimationFrame(anim);
 }
