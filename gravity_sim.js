@@ -248,7 +248,7 @@ mouse.mouseleave = function(e) {
 };
 
 //window.addEventListener("mousemove", mouse.touches);
-window.addEventListener("click", mouse.touches);
+//window.addEventListener("click", mouse.touches);
 window.addEventListener("touchstart", mouse.touches);
 window.addEventListener("touchmove", mouse.touches)
 
