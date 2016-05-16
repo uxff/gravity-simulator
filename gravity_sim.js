@@ -5,7 +5,7 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 40;
+var maxParticles = 4;
 var particles = [];
 var eternals  = [];
 var hue = 183;
@@ -72,10 +72,10 @@ function EternalStar() {
 P.prototype = {
     init: function() {
         this.size = 3;//this.origSize = random(10, 100);
-        this.x = random(10, w-10);
+        this.x = w/2;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = random(-1, 1);
-        this.vy = random(-1, 1);
+        this.vx = 1.2;//random(-0.1, 0.1);
+        this.vy = 0;//random(-0.1, 0.1);
         this.mass = random(1, 10);
         this.speed = this.origSpeed = random(.01, .03);
         this.hue = hue;
@@ -102,7 +102,9 @@ P.prototype = {
 
         this.drawDir();
 
-        this.update();
+        for (var i=0; i<10; i++) {
+            this.update();
+        }
     },
 
     update: function() {
@@ -162,7 +164,7 @@ P.prototype = {
     calcGravity: function(target) {
         var dist = distance(this.x, this.y, target.x, target.y);
         // 万有引力公式
-        var force = this.mass * target.mass / (dist*dist) * 1.1;
+        var force = this.mass * target.mass / (dist*dist) * 0.41;
         var g = new Acc(force);
         g.dir = this.calcRelativePos(target);
         //console.log(g);
