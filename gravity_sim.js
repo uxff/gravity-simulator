@@ -5,11 +5,12 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 8;
+var maxParticles = 14;
 var particles = [];
 
 var hue = 183;
-
+// 万有引力系数 G 决定引力大小
+var G = 0.000021;
 
 var clearColor = "rgba(0, 0, 0, .2)";
 
@@ -45,6 +46,7 @@ function P() {
     this.stepx = 0;
     this.stepy = 0;
     this.mass = 5;
+    this.lifeStep = 1;// 生命阶段: 1=正常运转 2=爆炸中 3=碎片 4=死亡
 }
 mouse = {};
 //mouse.prototype = new P();
@@ -82,32 +84,41 @@ P.prototype = {
     },
 
     draw: function() {
-        
 
-        ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
-        ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
-        ctx.shadowBlur = this.size * 1;
-        ctx.beginPath();
+        if (this.lifeStep==1) {
 
-        ctx.moveTo(this.x, this.y);
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
+            ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
+            ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
+            ctx.shadowBlur = this.size * 1;
+            ctx.beginPath();
 
-        ctx.closePath();
-        ctx.lineWidth = 1;
-        ctx.stroke();
+            ctx.moveTo(this.x, this.y);
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
 
-        //this.drawDir();
+            ctx.closePath();
+            ctx.lineWidth = 1;
+            ctx.stroke();
 
-        for (var i=0; i<100; i++) {
-            this.update();
+            //this.drawDir();
+            if (this.mass>0) {
+                
+                for (var i=0; i<100; i++) {
+                    this.update();
+                }
+            }
+        } else if (this.lifeStep==2) {
+            for (var i=0; i<this.bombingDot.length; ++i) {
+                this.bombingDot[i].draw();
+            }
         }
     },
 
     update: function() {
-        this.calcDistance(eternal);
+        var dist = this.calcDistance(eternal);
         //return ;
         //if (this.distanceFromMouse > 20)
-        if (1)//(!this.checkBorder(w, h))
+        // 小于1就碰撞了 爆炸
+        if (dist>1)//(!this.checkBorder(w, h))
         {
             this.oldx = this.x;
             this.oldy = this.y;
@@ -139,7 +150,24 @@ P.prototype = {
             //console.log('vx='+this.vx+' vy='+this.vy);
             
         } else {
-            this.init();
+            this.mass = 0;
+            this.isBombing = 1;
+            this.lifeStep = 2;
+            this.bombingDot = new Array();
+            this.bombingLen = random(5,20);
+            for (var i=0; i<this.bombingLen; ++i) {
+                var p = new P();
+                p.x = this.x;
+                p.y = this.y;
+                p.dir = random(0, Math.PI*2);
+                p.vx = 0.02 * Math.cos(p.dir);
+                p.vy = 0.02 * Math.sin(p.dir);
+                p.size = 1;
+                p.mass = 0;
+                p.lifeStep = 1;
+                this.bombingDot.push(p);
+            }
+            //this.init();
         }
         
     },
@@ -152,7 +180,7 @@ P.prototype = {
     calcGravity: function(target) {
         var dist = distance(this.x, this.y, target.x, target.y);
         // 万有引力公式
-        var force = this.mass * target.mass / (dist*dist) * 0.000021;
+        var force = this.mass * target.mass / (dist*dist) * G;
         var g = new Acc(force);
         g.dir = this.calcRelativePos(target);
         //console.log(g);
