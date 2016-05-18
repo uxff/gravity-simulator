@@ -5,13 +5,14 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 14;
+var maxParticles = 4;
 var particles = [];
 var bombs = [];
 
 var hue = 183;
 // 万有引力系数 G 决定引力大小
 var G = 0.000021;
+G = 0.1;
 
 var clearColor = "rgba(0, 0, 0, .2)";
 
@@ -72,10 +73,10 @@ function EternalStar() {
 }
 P.prototype = {
     init: function() {
-        this.size = 1;//this.origSize = random(10, 100);
+        this.size = 0.5;//this.origSize = random(10, 100);
         this.x = w/2;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = (h/2+10)/(h/2-this.y)*0.014;//random(-0.04, 0.04);//0.04;//
+        this.vx = (h/2+10)/(h/2-this.y)*0.914;//random(-0.04, 0.04);//0.04;//
         this.vy = 0;//random(-0.04, 0.04);//
         this.mass = random(1, 8);
         this.hue = random(1, 16000000);//hue;
@@ -83,7 +84,7 @@ P.prototype = {
         this.oldy = 0;
     },
 
-    draw: function() {
+    draw: function(ctx) {
 
         if (this.lifeStep==1) {
 
@@ -101,9 +102,6 @@ P.prototype = {
             //this.drawDir();
             if (this.mass>0) {
                 
-                for (var i=0; i<100; i++) {
-                    this.update();
-                }
             }
         } else if (this.lifeStep==2) {
             //for (var i=0; i<this.bombingDot.length; ++i) {
@@ -113,14 +111,15 @@ P.prototype = {
     },
 
     update: function() {
-        if (eternal.id == this.id) {
-            return ;
-        }
-        var dist = this.calcDistance(eternal);
+        //if (eternal.id == this.id) {
+        //    return ;
+        //}
+        //var dist = this.calcDistance(eternal);
         //return ;
         //if (this.distanceFromMouse > 20)
         // 小于1就碰撞了 爆炸
-        if (dist>1)//(!this.checkBorder(w, h))
+        //if (dist>1)//(!this.checkBorder(w, h))
+        if (1)
         {
             this.oldx = this.x;
             this.oldy = this.y;
@@ -128,12 +127,12 @@ P.prototype = {
             var aAll = this.calcGravityAll();
             //aAll.parseXY();
 
-            var a = this.calcGravity(eternal);
-            a.parseXY();
-            this.ax = aAll.ax*1.0+a.ax;
-            this.ay = aAll.ay*1.0+a.ay;
-            //this.ax = a.ax;
-            //this.ay = a.ay;
+            //var a = this.calcGravity(eternal);
+            //a.parseXY();
+            //this.ax = aAll.ax*1.0+a.ax;
+            //this.ay = aAll.ay*1.0+a.ay;
+            this.ax = aAll.ax;
+            this.ay = aAll.ay;
 
             this.vx += this.ax;
             this.vy += this.ay;
@@ -144,7 +143,7 @@ P.prototype = {
             this.stepx = this.x - this.oldx;
             this.stepy = this.y - this.oldy;
             
-            this.calcRelativePos(eternal);
+            //this.calcRelativePos(eternal);
 
             //console.log('stepx='+this.stepx+' x='+this.x);
             //console.log('stepy='+this.stepy+' y='+this.y);
@@ -152,13 +151,13 @@ P.prototype = {
             //console.log('vx='+this.vx+' vy='+this.vy);
             
         } else if (this.mass>0) {
-            this.mass = 0;
-            this.isBombing = 1;
-            this.lifeStep = 2;
-            //this.init();
-            var bomb = new Bomb(this.x, this.y, "hsla(" + this.hue + ", 100%, 55%, 1)");
-            bomb.init();
-            bombs.push(bomb);
+            //this.mass = 0;
+            //this.isBombing = 1;
+            //this.lifeStep = 2;
+            ////this.init();
+            //var bomb = new Bomb(this.x, this.y, "hsla(" + this.hue + ", 100%, 55%, 1)");
+            //bomb.init();
+            //bombs.push(bomb);
         } else {
         }
         
@@ -169,10 +168,18 @@ P.prototype = {
     calcDistance: function(target) {
         return this.distanceFromMouse = distance(this.x, this.y, target.x, target.y);
     },
-    calcGravity: function(target) {
-        var dist = distance(this.x, this.y, target.x, target.y);
+    /*
+        return Acc obj
+    */
+    calcGravity: function(target, dist) {
+        //var dist = distance(this.x, this.y, target.x, target.y);
+        if (dist<1) {
+            return new Acc(0);
+        }
         // 万有引力公式
-        var force = this.mass * target.mass / (dist*dist) * G;
+        // F = M1*M2 / (r*r) * G
+        // 这里计算加速度 所以约分去掉了本对象的质量
+        var force = target.mass / (dist*dist) * G;
         var g = new Acc(force);
         g.dir = this.calcRelativePos(target);
         //console.log(g);
@@ -186,19 +193,36 @@ P.prototype = {
             if (target.id == this.id) {
                 continue;
             }
-            var gtmp = this.calcGravity(target);
-            gtmp.parseXY();
-            //console.log(gtmp);
-            g.ax += gtmp.ax;
-            g.ay += gtmp.ay;
+            // 距离太小将爆炸，并合并
+            var dist = distance(this.x, this.y, target.x, target.y);
+            if (dist<10) {
+                //console.log(dist);
+                if (this.mass > target.mass) {
+                    this.mass += target.mass;
+                    target.mass = 0;
+                    target.lifeStep = 2;
+                } else {
+                    target.mass += this.mass;
+                    this.mass = 0;
+                    this.lifeStep = 2;
+                }
+            } else {
+                var gtmp = this.calcGravity(target, dist);
+                gtmp.parseXY();
+                //console.log(gtmp);
+                g.ax += gtmp.ax;
+                g.ay += gtmp.ay;
+            }
         //console.log(g);
         }
         return g;
     },
+    // 检查屏幕边界
     checkBorder: function(width, height) {
         var f = parseFloat(this.size)+1.0;
         return (this.x<-f || this.y<-f || this.x>width+f || this.y>height+f);
     },
+    // 计算相对位置和方向
     calcRelativePos: function(target) {
         var x = target.x - this.x;
         var y = target.y - this.y;
@@ -219,7 +243,7 @@ P.prototype = {
         ctx.stroke();
     },
     calcGravityCenter: function() {
-        return mouse;
+        //return mouse;
     }
     
 }
@@ -278,12 +302,12 @@ for (var i = 1; i <= maxParticles; i++) {
 }
 
 eternal = new P();//new EternalStar();
-eternal.init();
+//eternal.init();
 eternal.id = particles.length;
 eternal.mass = 1800;
 eternal.x = w/2;
 eternal.y = h/2;
-eternal.size = 6;
+eternal.size = 1.5;
 // push 了就报错
 particles.push(eternal);
 
@@ -296,9 +320,26 @@ function anim() {
     ctx.fillRect(0, 0, w, h);
     //mouse.move();
 
-    for (var i in particles) {
+    for (var i=0; i<particles.length; ++i) {
         var p = particles[i];
-        p.draw();
+        //console.log(i);
+        p.draw(ctx);
+        for (var k=0; k<1; ++k) {
+            p.update();
+        }
+        if (p.lifeStep==2) {
+            var bomb = new Bomb(p.x, p.y, p.color);
+            bomb.init();
+            bombs.push(bomb);
+            p.lifeStep = 3;
+            //i--;
+        }
+    }
+    for (var i=0; i<particles.length; ++i) {
+        if (particles[i].lifeStep==3) {
+            particles = particles.splice(i, 1);
+        }
+        --i;
     }
     for (var i in bombs) {
         var b = bombs[i];
@@ -307,8 +348,8 @@ function anim() {
     hue++;
     hue %= 16000000;
     //mouse.draw();
-    eternal.draw();
-    requestAnimationFrame(anim);
+    //eternal.draw();
+    //requestAnimationFrame(anim);
 }
 
 anim();
