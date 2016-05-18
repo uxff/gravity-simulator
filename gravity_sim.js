@@ -74,10 +74,10 @@ function EternalStar() {
 P.prototype = {
     init: function() {
         this.size = 0.5;//this.origSize = random(10, 100);
-        this.x = w/2;//random(10, w-10);
+        this.x = w/2-10.0;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = (h/2+10)/(h/2-this.y)*0.014;//random(-0.04, 0.04);//0.04;//
-        this.vy = 0;//random(-0.04, 0.04);//
+        this.vx = (h/2+200)/(h/2-this.y)*0.00514;//random(-0.02, 0.02);//
+        this.vy = 0;//random(-0.02, 0.02);//
         this.mass = random(1, 8);
         this.hue = random(1, 16000000);//hue;
         this.oldx = 0;
@@ -99,68 +99,40 @@ P.prototype = {
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            //this.drawDir();
-            if (this.mass>0) {
-                
-            }
-        } else if (this.lifeStep==2) {
-            //for (var i=0; i<this.bombingDot.length; ++i) {
-            //    this.bombingDot[i].draw();
-            //}
         }
     },
 
     update: function() {
-        //if (eternal.id == this.id) {
-        //    return ;
-        //}
-        //var dist = this.calcDistance(eternal);
-        //return ;
-        //if (this.distanceFromMouse > 20)
         // 小于1就碰撞了 爆炸
         //if (dist>1)//(!this.checkBorder(w, h))
-        if (1)
-        {
-            this.oldx = this.x;
-            this.oldy = this.y;
-            
-            var aAll = this.calcGravityAll();
-            //aAll.parseXY();
-
-            //var a = this.calcGravity(eternal);
-            //a.parseXY();
-            //this.ax = aAll.ax*1.0+a.ax;
-            //this.ay = aAll.ay*1.0+a.ay;
-            this.ax = aAll.ax;
-            this.ay = aAll.ay;
-
-            this.vx += this.ax;
-            this.vy += this.ay;
-
-            this.x += this.vx;
-            this.y += this.vy;
-            
-            this.stepx = this.x - this.oldx;
-            this.stepy = this.y - this.oldy;
-            
-            //this.calcRelativePos(eternal);
-
-            //console.log('stepx='+this.stepx+' x='+this.x);
-            //console.log('stepy='+this.stepy+' y='+this.y);
-            //console.log('ax='+this.ax+' ay='+this.ay+' dir='+this.dir);
-            //console.log('vx='+this.vx+' vy='+this.vy);
-            
-        } else if (this.mass>0) {
-            //this.mass = 0;
-            //this.isBombing = 1;
-            //this.lifeStep = 2;
-            ////this.init();
-            //var bomb = new Bomb(this.x, this.y, "hsla(" + this.hue + ", 100%, 55%, 1)");
-            //bomb.init();
-            //bombs.push(bomb);
-        } else {
-        }
+        this.oldx = this.x;
+        this.oldy = this.y;
         
+        var aAll = this.calcGravityAll();
+        //aAll.parseXY();
+
+        //var a = this.calcGravity(eternal);
+        //a.parseXY();
+        //this.ax = aAll.ax*1.0+a.ax;
+        //this.ay = aAll.ay*1.0+a.ay;
+        this.ax = aAll.ax;
+        this.ay = aAll.ay;
+
+        this.vx += this.ax;
+        this.vy += this.ay;
+
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        this.stepx = this.x - this.oldx;
+        this.stepy = this.y - this.oldy;
+        
+        //this.calcRelativePos(eternal);
+
+        //console.log('stepx='+this.stepx+' x='+this.x);
+        //console.log('stepy='+this.stepy+' y='+this.y);
+        //console.log('ax='+this.ax+' ay='+this.ay+' dir='+this.dir);
+        //console.log('vx='+this.vx+' vy='+this.vy);
     },
     /*
         target = {x:10,y:20}
@@ -196,7 +168,7 @@ P.prototype = {
             }
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
-            if (dist<1) {
+            if (dist<2.5) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
@@ -312,7 +284,6 @@ eternal.mass = 4800;
 eternal.x = w/2;
 eternal.y = h/2;
 eternal.size = 2.5;
-// push 了就报错
 particles.push(eternal);
 
 
@@ -337,7 +308,6 @@ function anim() {
             bomb.init();
             bombs.push(bomb);
             //console.log('BOMBED,p.id='+p.id);
-            //console.log(p);
             p.lifeStep = 3;
             //i--;
         }
