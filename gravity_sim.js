@@ -7,6 +7,7 @@ var ctx = c.getContext("2d");
 
 var maxParticles = 14;
 var particles = [];
+var bombs = [];
 
 var hue = 183;
 // 万有引力系数 G 决定引力大小
@@ -53,15 +54,14 @@ mouse = {};
 mouse.size = 200;
 mouse.x = mouse.tx = w / 2;
 mouse.y = mouse.ty = h / 2;
-mouse.mass = 10;
 mouse.draw = function () {
     //ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
     ctx.shadowColor = 'rgba(255,255,0,1)';//"hsla(" + 100 + ", 100%, 55%, 1)";
     //ctx.shadowBlur = this.size * 2;
     ctx.beginPath();
 
-    ctx.moveTo(this.x, this.y);
-    ctx.arc(this.x, this.y, 1, 0, Math.PI*2 , false); 
+    //ctx.moveTo(this.x, this.y);
+    ctx.arc(this.x, this.y, 10, 0, Math.PI*2 , false); 
 
     ctx.closePath();
     ctx.lineWidth = 2;
@@ -77,7 +77,7 @@ P.prototype = {
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
         this.vx = (h/2+10)/(h/2-this.y)*0.014;//random(-0.04, 0.04);//0.04;//
         this.vy = 0;//random(-0.04, 0.04);//
-        this.mass = random(1, 10);
+        this.mass = random(1, 8);
         this.hue = random(1, 16000000);//hue;
         this.oldx = 0;
         this.oldy = 0;
@@ -92,7 +92,6 @@ P.prototype = {
             ctx.shadowBlur = this.size * 1;
             ctx.beginPath();
 
-            ctx.moveTo(this.x, this.y);
             ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
 
             ctx.closePath();
@@ -107,13 +106,16 @@ P.prototype = {
                 }
             }
         } else if (this.lifeStep==2) {
-            for (var i=0; i<this.bombingDot.length; ++i) {
-                this.bombingDot[i].draw();
-            }
+            //for (var i=0; i<this.bombingDot.length; ++i) {
+            //    this.bombingDot[i].draw();
+            //}
         }
     },
 
     update: function() {
+        if (eternal.id == this.id) {
+            return ;
+        }
         var dist = this.calcDistance(eternal);
         //return ;
         //if (this.distanceFromMouse > 20)
@@ -149,25 +151,15 @@ P.prototype = {
             //console.log('ax='+this.ax+' ay='+this.ay+' dir='+this.dir);
             //console.log('vx='+this.vx+' vy='+this.vy);
             
-        } else {
+        } else if (this.mass>0) {
             this.mass = 0;
             this.isBombing = 1;
             this.lifeStep = 2;
-            this.bombingDot = new Array();
-            this.bombingLen = random(5,20);
-            for (var i=0; i<this.bombingLen; ++i) {
-                var p = new P();
-                p.x = this.x;
-                p.y = this.y;
-                p.dir = random(0, Math.PI*2);
-                p.vx = 0.02 * Math.cos(p.dir);
-                p.vy = 0.02 * Math.sin(p.dir);
-                p.size = 1;
-                p.mass = 0;
-                p.lifeStep = 1;
-                this.bombingDot.push(p);
-            }
             //this.init();
+            var bomb = new Bomb(this.x, this.y, "hsla(" + this.hue + ", 100%, 55%, 1)");
+            bomb.init();
+            bombs.push(bomb);
+        } else {
         }
         
     },
@@ -291,8 +283,9 @@ eternal.id = particles.length;
 eternal.mass = 1800;
 eternal.x = w/2;
 eternal.y = h/2;
+eternal.size = 6;
 // push 了就报错
-//particles.push(eternal);
+particles.push(eternal);
 
 
 function anim() {
@@ -301,15 +294,20 @@ function anim() {
     ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = "source-over";
     ctx.fillRect(0, 0, w, h);
-    mouse.move();
+    //mouse.move();
 
     for (var i in particles) {
         var p = particles[i];
         p.draw();
     }
+    for (var i in bombs) {
+        var b = bombs[i];
+        b.draw(ctx);
+    }
     hue++;
     hue %= 16000000;
-    mouse.draw();
+    //mouse.draw();
+    eternal.draw();
     requestAnimationFrame(anim);
 }
 
