@@ -7,7 +7,7 @@ function BombDot(x, y) {
 }
 BombDot.prototype.init = function() {
     this.dir = Math.random()*Math.PI*2;
-    this.a = 1.5 + Math.random()*1.0;
+    this.a = 1.0 + Math.random()*1.5;
     this.vx = this.a * Math.cos(this.dir);
     this.vy = this.a * Math.sin(this.dir);
 }

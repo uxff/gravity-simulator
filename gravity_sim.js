@@ -5,14 +5,14 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 4;
+var maxParticles = 14;
 var particles = [];
 var bombs = [];
 
 var hue = 183;
 // 万有引力系数 G 决定引力大小
 var G = 0.000021;
-G = 0.1;
+//G = 0.1;
 
 var clearColor = "rgba(0, 0, 0, .2)";
 
@@ -76,7 +76,7 @@ P.prototype = {
         this.size = 0.5;//this.origSize = random(10, 100);
         this.x = w/2;//random(10, w-10);
         this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = (h/2+10)/(h/2-this.y)*0.914;//random(-0.04, 0.04);//0.04;//
+        this.vx = (h/2+10)/(h/2-this.y)*0.014;//random(-0.04, 0.04);//0.04;//
         this.vy = 0;//random(-0.04, 0.04);//
         this.mass = random(1, 8);
         this.hue = random(1, 16000000);//hue;
@@ -190,18 +190,22 @@ P.prototype = {
         //console.log(particles);
         for (var i in particles) {
             target = particles[i];
-            if (target.id == this.id) {
+            if (target.id == this.id || this.lifeStep!=1 || target.lifeStep!=1) {
+                // 已经撞击或者已经爆炸的不能参与计算
                 continue;
             }
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
-            if (dist<10) {
+            if (dist<1) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
+                    //console.log('BIG:'+this.mass+' id:'+this.id);
+                    //console.log('TARGET is less mass , will bomb! id='+target.id+' crash on id='+this.id);
                     this.mass += target.mass;
                     target.mass = 0;
                     target.lifeStep = 2;
                 } else {
+                    //console.log('ME is less mass , will bomb! id='+this.id+' crash on id='+target.id);
                     target.mass += this.mass;
                     this.mass = 0;
                     this.lifeStep = 2;
@@ -213,7 +217,7 @@ P.prototype = {
                 g.ax += gtmp.ax;
                 g.ay += gtmp.ay;
             }
-        //console.log(g);
+            //console.log(g);
         }
         return g;
     },
@@ -304,10 +308,10 @@ for (var i = 1; i <= maxParticles; i++) {
 eternal = new P();//new EternalStar();
 //eternal.init();
 eternal.id = particles.length;
-eternal.mass = 1800;
+eternal.mass = 4800;
 eternal.x = w/2;
 eternal.y = h/2;
-eternal.size = 1.5;
+eternal.size = 2.5;
 // push 了就报错
 particles.push(eternal);
 
@@ -324,22 +328,25 @@ function anim() {
         var p = particles[i];
         //console.log(i);
         p.draw(ctx);
-        for (var k=0; k<1; ++k) {
+        for (var k=0; k<100; ++k) {
             p.update();
         }
         if (p.lifeStep==2) {
             var bomb = new Bomb(p.x, p.y, p.color);
+            bomb.pid = p.id;
             bomb.init();
             bombs.push(bomb);
+            //console.log('BOMBED,p.id='+p.id);
+            //console.log(p);
             p.lifeStep = 3;
             //i--;
         }
     }
     for (var i=0; i<particles.length; ++i) {
         if (particles[i].lifeStep==3) {
-            particles = particles.splice(i, 1);
+            particles.splice(i, 1);
+            --i;
         }
-        --i;
     }
     for (var i in bombs) {
         var b = bombs[i];
@@ -349,7 +356,7 @@ function anim() {
     hue %= 16000000;
     //mouse.draw();
     //eternal.draw();
-    //requestAnimationFrame(anim);
+    requestAnimationFrame(anim);
 }
 
 anim();
