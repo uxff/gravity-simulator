@@ -5,7 +5,7 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 50;
+var maxParticles = 4;
 var particles = [];
 var bombs = [];
 
@@ -14,7 +14,7 @@ var hue = 183;
 var G = 0.000021;
 //G = 0.1;
 
-var clearColor = "rgba(0, 0, 0, .2)";
+var clearColor = "rgba(15, 15, 15, .2)";
 
 function random(min, max) {
     return Math.random() * (max - min) + min
@@ -101,12 +101,12 @@ eternal = new Orb();//new EternalStar();
 //eternal.init();
 var ETERNAL_ID = particles.length;
 eternal.id = particles.length;
-eternal.mass = 4800;
+eternal.mass = 14800;
 eternal.x = w/2;
 eternal.y = h/2;
 eternal.size = 2.5;
 
-//particles.push(eternal);
+particles.push(eternal);
 
 
 function anim() {
@@ -121,7 +121,7 @@ function anim() {
         var p = particles[i];
         //console.log(i);
         p.draw(ctx);
-        if (p.id != ETERNAL_ID)//最后一颗恒星不计算
+        if (p.id != ETERNAL_ID)//最后一颗恒星不计算位移,不移动
         for (var k=0; k<100; ++k) {
             p.update(particles);
         }
@@ -149,7 +149,8 @@ function anim() {
     hue %= 16000000;
     //mouse.draw();
     //eternal.draw();
-    requestAnimationFrame(anim);
+    //requestAnimationFrame(anim);
 }
 
-anim();
+setInterval(anim, 40);
+//anim();

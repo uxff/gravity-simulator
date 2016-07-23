@@ -9,24 +9,19 @@ function Orb() {
     this.ax = 0;
     this.ay = 0;
     this.dir = Math.PI/2;
-    //this.oldx = 0;
-    //this.oldy = 0;
-    //this.stepx = 0;
-    //this.stepy = 0;
     this.mass = 5;
     this.lifeStep = 1;// 生命阶段: 1=正常运转 2=爆炸中 3=碎片 4=死亡
 }
 Orb.prototype = {
     init: function() {
-        this.size = 0.5;//this.origSize = random(10, 100);
-        this.x = random(500, w-500);//w/2-10.0;//
-        this.y = random(200, h-200);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = 0;//random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//
-        this.vy = 0;//random(-0.02, 0.02);//0;//
-        this.mass = random(11, 418);
+        this.x = random(200, w-200);//w/2-10.0;//
+        this.y = random(200, h-200);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
+        this.vx = random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//0;//
+        this.vy = random(-0.02, 0.02);//0;//0;//
+        this.mass = random(11, 88);
+        this.size = 1;//Math.sqrt(this.mass)/5;//this.origSize = random(10, 100);
         this.hue = random(1, 16000000);//hue;
-        //this.oldx = 0;
-        //this.oldy = 0;
+        //console.log('this.id='+this.id+' this.mass='+this.mass+' this.vx='+this.vx);
     },
 
     draw: function(ctx) {
@@ -49,9 +44,6 @@ Orb.prototype = {
 
     update: function(particles) {
         // 小于1就碰撞了 爆炸
-        //if (dist>1)//(!this.checkBorder(w, h))
-        //this.oldx = this.x;
-        //this.oldy = this.y;
         
         var aAll = this.calcGravityAll(particles);
         //aAll.parseXY();
@@ -63,25 +55,20 @@ Orb.prototype = {
         //if (this.lifeStep==10) {
         //    this.lifeStep = 1;
         //}
-        //else
-        this.ax = aAll.ax;
-        this.ay = aAll.ay;
+        //else {
+        //}
+        if (this.lifeStep!=1) {
+            //console.log(' id='+this.id+' after calc all g, this.lifeStep='+this.lifeStep);
+        } else {
+            this.ax = aAll.ax;
+            this.ay = aAll.ay;
 
-        this.vx += this.ax;
-        this.vy += this.ay;
+            this.vx += this.ax;
+            this.vy += this.ay;
 
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        //this.stepx = this.x - this.oldx;
-        //this.stepy = this.y - this.oldy;
-        
-        //this.calcRelativePos(eternal);
-
-        //console.log('stepx='+this.stepx+' x='+this.x);
-        //console.log('stepy='+this.stepy+' y='+this.y);
-        //console.log('ax='+this.ax+' ay='+this.ay+' dir='+this.dir);
-        //console.log('vx='+this.vx+' vy='+this.vy);
+            this.x += this.vx;
+            this.y += this.vy;
+        }
     },
     /*
         target = {x:10,y:20}
@@ -117,7 +104,7 @@ Orb.prototype = {
             }
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
-            if (dist<2.5) {
+            if (dist<3.0) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
@@ -125,24 +112,28 @@ Orb.prototype = {
                     // 动量守恒定律:   m1v1+m2v2=m1v1ˊ+m2v2ˊ
                     // m1v1+m2v2 = m3v3; v3=(m1v1+m2v2)/m3
                     this.mass += target.mass;
+                    //console.log(' target '+target.id+' will be eaten by '+this.id+'! before bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+this.vx);
                     this.vx = (target.mass*target.vx+this.mass*this.vx)/this.mass;
                     this.vy = (target.mass*target.vy+this.mass*this.vy)/this.mass;
-                    // m1a1+m2a2 = m3a3
+                    //target.vx = target.vy = 0;
+                    //console.log(' after target '+target.id+' bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+this.vx);
+                    // m1a1+m2a2 = m3a3 // 只有动量守恒定律似乎有疑问，碰撞后速度突然很快，研究中。。。
                     //this.ax -= target.ax;
                     //this.ay -= target.ay;
-                    //target.mass = 0;
+                    target.mass = 0;
                     target.lifeStep = 2;
-                    //this.lifeStep = 10;
                 } else {
                     //console.log('ME is less mass , will bomb! id='+this.id+' crash on id='+target.id);
                     target.mass += this.mass;
+                    //console.log(' this '+this.id+' will be eaten by '+target.id+'! before bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+target.vx);
                     target.vx = (target.mass*target.vx+this.mass*this.vx)/target.mass;
                     target.vy = (target.mass*target.vy+this.mass*this.vy)/target.mass;
+                    //this.vx = this.vy = 0;
+                    //console.log(' after this '+this.id+' bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+target.vx);
                     //target.ax -= this.ax;
                     //target.ay -= this.ay;
-                    //this.mass = 0;
+                    this.mass = 0;
                     this.lifeStep = 2;
-                    //target.lifeStep = 10;
                 }
             } else {
                 var gtmp = this.calcGravity(target, dist);
