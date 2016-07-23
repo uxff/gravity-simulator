@@ -5,7 +5,7 @@ var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
 
-var maxParticles = 14;
+var maxParticles = 50;
 var particles = [];
 var bombs = [];
 
@@ -99,12 +99,14 @@ for (var i = 1; i <= maxParticles; i++) {
 
 eternal = new Orb();//new EternalStar();
 //eternal.init();
+var ETERNAL_ID = particles.length;
 eternal.id = particles.length;
 eternal.mass = 4800;
 eternal.x = w/2;
 eternal.y = h/2;
 eternal.size = 2.5;
-particles.push(eternal);
+
+//particles.push(eternal);
 
 
 function anim() {
@@ -119,11 +121,12 @@ function anim() {
         var p = particles[i];
         //console.log(i);
         p.draw(ctx);
+        if (p.id != ETERNAL_ID)//最后一颗恒星不计算
         for (var k=0; k<100; ++k) {
             p.update(particles);
         }
         if (p.lifeStep==2) {
-            var bomb = new Bomb(p.x, p.y, p.color);
+            var bomb = new Bomb(p.x, p.y, p.hue);
             bomb.pid = p.id;
             bomb.init();
             bombs.push(bomb);

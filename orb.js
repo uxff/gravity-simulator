@@ -9,24 +9,24 @@ function Orb() {
     this.ax = 0;
     this.ay = 0;
     this.dir = Math.PI/2;
-    this.oldx = 0;
-    this.oldy = 0;
-    this.stepx = 0;
-    this.stepy = 0;
+    //this.oldx = 0;
+    //this.oldy = 0;
+    //this.stepx = 0;
+    //this.stepy = 0;
     this.mass = 5;
     this.lifeStep = 1;// 生命阶段: 1=正常运转 2=爆炸中 3=碎片 4=死亡
 }
 Orb.prototype = {
     init: function() {
         this.size = 0.5;//this.origSize = random(10, 100);
-        this.x = w/2-10.0;//random(10, w-10);
-        this.y = random(10, h-10);//0;//Math.random() > .5 ? -this.size : h + this.size;
-        this.vx = (h/2+200)/(h/2-this.y)*0.00514;//random(-0.02, 0.02);//
-        this.vy = 0;//random(-0.02, 0.02);//
-        this.mass = random(1, 8);
+        this.x = random(500, w-500);//w/2-10.0;//
+        this.y = random(200, h-200);//0;//Math.random() > .5 ? -this.size : h + this.size;
+        this.vx = 0;//random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//
+        this.vy = 0;//random(-0.02, 0.02);//0;//
+        this.mass = random(11, 418);
         this.hue = random(1, 16000000);//hue;
-        this.oldx = 0;
-        this.oldy = 0;
+        //this.oldx = 0;
+        //this.oldy = 0;
     },
 
     draw: function(ctx) {
@@ -50,8 +50,8 @@ Orb.prototype = {
     update: function(particles) {
         // 小于1就碰撞了 爆炸
         //if (dist>1)//(!this.checkBorder(w, h))
-        this.oldx = this.x;
-        this.oldy = this.y;
+        //this.oldx = this.x;
+        //this.oldy = this.y;
         
         var aAll = this.calcGravityAll(particles);
         //aAll.parseXY();
@@ -60,6 +60,10 @@ Orb.prototype = {
         //a.parseXY();
         //this.ax = aAll.ax*1.0+a.ax;
         //this.ay = aAll.ay*1.0+a.ay;
+        //if (this.lifeStep==10) {
+        //    this.lifeStep = 1;
+        //}
+        //else
         this.ax = aAll.ax;
         this.ay = aAll.ay;
 
@@ -69,8 +73,8 @@ Orb.prototype = {
         this.x += this.vx;
         this.y += this.vy;
         
-        this.stepx = this.x - this.oldx;
-        this.stepy = this.y - this.oldy;
+        //this.stepx = this.x - this.oldx;
+        //this.stepy = this.y - this.oldy;
         
         //this.calcRelativePos(eternal);
 
@@ -118,14 +122,27 @@ Orb.prototype = {
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
                     //console.log('TARGET is less mass , will bomb! id='+target.id+' crash on id='+this.id);
+                    // 动量守恒定律:   m1v1+m2v2=m1v1ˊ+m2v2ˊ
+                    // m1v1+m2v2 = m3v3; v3=(m1v1+m2v2)/m3
                     this.mass += target.mass;
-                    target.mass = 0;
+                    this.vx = (target.mass*target.vx+this.mass*this.vx)/this.mass;
+                    this.vy = (target.mass*target.vy+this.mass*this.vy)/this.mass;
+                    // m1a1+m2a2 = m3a3
+                    //this.ax -= target.ax;
+                    //this.ay -= target.ay;
+                    //target.mass = 0;
                     target.lifeStep = 2;
+                    //this.lifeStep = 10;
                 } else {
                     //console.log('ME is less mass , will bomb! id='+this.id+' crash on id='+target.id);
                     target.mass += this.mass;
-                    this.mass = 0;
+                    target.vx = (target.mass*target.vx+this.mass*this.vx)/target.mass;
+                    target.vy = (target.mass*target.vy+this.mass*this.vy)/target.mass;
+                    //target.ax -= this.ax;
+                    //target.ay -= this.ay;
+                    //this.mass = 0;
                     this.lifeStep = 2;
+                    //target.lifeStep = 10;
                 }
             } else {
                 var gtmp = this.calcGravity(target, dist);
