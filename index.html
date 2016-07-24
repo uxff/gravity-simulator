@@ -1,6 +1,24 @@
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
 <link href="gravity_sim.css" rel="stylesheet" position="1">
+<!--参数设置-->
+<div style="position:absolute">
+<form action="" method="GET">
+<label>刷屏一次计算次数:<input type="input" name="calcTimes" id="calcTimes" value="200"/></label>
+<label>天体数量:<input type="input" name="maxParticles" id="maxParticles" value="8"/></label>
+<label>+中心天体:<input type="input" name="enableCenter" id="enableCenter" value="1"/></label>
+<label>中心天体质量:<input type="input" name="centerMass" id="centerMass" value="15000"/></label>
+<label>其他天体质量:<input type="input" name="orbMinMass" id="orbMinMass" value="10"/>~<input type="input" name="orbMaxMass" id="orbMaxMass" value="100"/></label>
+<input type="submit" value="yes" class="btn">
+<a href="index.html">重置</a>
+</form>
+</div>
 <canvas id='canvas-club'></canvas>
 <script src="acc.js"></script>
 <script src="bomb.js"></script>
 <script src="orb.js"></script>
+<script src="urlsearch.js"></script>
 <script src="gravity_sim.js"></script>

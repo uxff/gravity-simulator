@@ -4,12 +4,21 @@ var c = document.getElementById("canvas-club");
 var w = c.width = window.innerWidth;
 var h = c.height = window.innerHeight;
 var ctx = c.getContext("2d");
+var urlParam = new UrlSearch(); //实例化
 
-var maxParticles = 4;
+// 可配置参数
+var maxParticles = urlParam.get('maxParticles') || 10;
+var calcTimes = urlParam.get('calcTimes') || 100;
+var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
+var orbMinMass = urlParam.get('orbMinMass');
+var orbMaxMass = urlParam.get('orbMaxMass');
+//console.log(urlParam.get('enableCenter', 'ori'));
+//console.log(enableCenter);
+
 var particles = [];
 var bombs = [];
 
-var hue = 183;
+var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
 var G = 0.000021;
 //G = 0.1;
@@ -43,13 +52,6 @@ mouse.draw = function () {
     ctx.stroke();
 
 }
-
-//function EternalStar() {
-//    this.mass = 1600;
-//    this.x = w / 2;
-//    this.y = h / 2;
-//}
-//EternalStar.prototype = new P();
 
 mouse.move = function() {
     if (!distance(mouse.x, mouse.y, mouse.tx, mouse.ty) <= .1) {
@@ -92,6 +94,7 @@ for (var i = 1; i <= maxParticles; i++) {
         var p = new Orb();
         p.id = particles.length;
         p.init();
+        p.mass = random(orbMinMass, orbMaxMass);
         particles.push(p);
         //console.log(i);
     //}, i * 50);
@@ -106,7 +109,7 @@ eternal.x = w/2;
 eternal.y = h/2;
 eternal.size = 2.5;
 
-particles.push(eternal);
+enableCenter && particles.push(eternal);
 
 
 function anim() {
@@ -122,7 +125,7 @@ function anim() {
         //console.log(i);
         p.draw(ctx);
         if (p.id != ETERNAL_ID)//最后一颗恒星不计算位移,不移动
-        for (var k=0; k<100; ++k) {
+        for (var k=0; k<calcTimes; ++k) {
             p.update(particles);
         }
         if (p.lifeStep==2) {

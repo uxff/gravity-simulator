@@ -18,7 +18,7 @@ Orb.prototype = {
         this.y = random(200, h-200);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
         this.vx = random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//0;//
         this.vy = random(-0.02, 0.02);//0;//0;//
-        this.mass = random(11, 88);
+        //this.mass = random(11, 88);
         this.size = 1;//Math.sqrt(this.mass)/5;//this.origSize = random(10, 100);
         this.hue = random(1, 16000000);//hue;
         //console.log('this.id='+this.id+' this.mass='+this.mass+' this.vx='+this.vx);
