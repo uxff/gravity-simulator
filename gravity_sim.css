@@ -4,3 +4,17 @@ body {
     background: black;
     overflow: hidden;
 }
+
+div {
+    color:white;
+    font-size:10px;
+}
+
+input {
+    height:15px;
+    width: 50px;
+}
+
+.btn {
+    height:20px;
+}
