@@ -13,6 +13,7 @@ var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
 var orbMinMass = urlParam.get('orbMinMass');
 var orbMaxMass = urlParam.get('orbMaxMass');
 var centerMass = urlParam.get('centerMass');
+var orbMaxVelo = urlParam.get('orbMaxVelo', 'float');
 //console.log(urlParam.get('enableCenter', 'ori'));
 //console.log(enableCenter);
 
@@ -97,6 +98,8 @@ for (var i = 1; i <= maxParticles; i++) {
         p.id = particles.length;
         p.init();
         p.mass = random(orbMinMass, orbMaxMass);
+        p.vx = random(-orbMaxVelo, orbMaxVelo);
+        p.vy = random(-orbMaxVelo, orbMaxVelo);
         particles.push(p);
         //console.log(i);
     //}, i * 50);

@@ -1,8 +1,8 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
-<title>万有引力模拟 - canvas绘图</title>
-<meta name="keywords" content="canvas,万有引力,模拟"/>
+<title>万有引力模拟天体运行 - canvas绘图</title>
+<meta name="keywords" content="canvas,万有引力,天体运行,模拟"/>
 <meta name="description" content="使用canvas绘图模拟万有引力，可以自定义参数，发现天体运行奥秘。"/>
 </head>
 <body>
@@ -11,10 +11,11 @@
 <div style="position:absolute">
 <form action="" method="GET">
 <label>每次刷屏计算次数:<input type="input" name="calcTimes" id="calcTimes" value="200" title="每40ms绘图一次,每次绘图所有天体update次数,越大天体运动越快,cpu越繁忙,取决于cpu性能"/></label>
-<label>天体数量:<input type="input" name="maxParticles" id="maxParticles" value="8"/></label>
+<label>天体数量:<input type="input" name="maxParticles" id="maxParticles" value="10"/></label>
 <label>+中心天体:<input type="input" name="enableCenter" id="enableCenter" value="1" title="1或0//是否启用中心大质量天体"/></label>
 <label>中心天体质量:<input type="input" name="centerMass" id="centerMass" value="15000"/></label>
-<label>其他天体质量:<input type="input" name="orbMinMass" id="orbMinMass" value="10"/>~<input type="input" name="orbMaxMass" id="orbMaxMass" value="100"/></label>
+<label>其他天体质量:<input type="input" name="orbMinMass" id="orbMinMass" value="5"/>~<input type="input" name="orbMaxMass" id="orbMaxMass" value="100"/></label>
+<label>天体初始速度:<input type="input" name="orbMaxVelo" id="orbMaxVelo" value="0.02" title="最大初始速度,太大会飞出屏幕,难以俘获,体验不好;如果=0,基本是面向中心天体自由落体加速;建议0.02"/></label>
 <input type="submit" value="yes" class="btn">
 <a href="index.html"><button type="button">重置</button></a>
 </form>

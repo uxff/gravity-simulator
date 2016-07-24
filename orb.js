@@ -14,8 +14,8 @@ function Orb() {
 }
 Orb.prototype = {
     init: function() {
-        this.x = random(200, w-200);//w/2-10.0;//
-        this.y = random(200, h-200);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
+        this.x = random(20, w-20);//w/2-10.0;//
+        this.y = random(20, h-20);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
         this.vx = random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//0;//
         this.vy = random(-0.02, 0.02);//0;//0;//
         //this.mass = random(11, 88);
