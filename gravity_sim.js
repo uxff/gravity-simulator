@@ -12,6 +12,7 @@ var calcTimes = urlParam.get('calcTimes') || 100;
 var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
 var orbMinMass = urlParam.get('orbMinMass');
 var orbMaxMass = urlParam.get('orbMaxMass');
+var centerMass = urlParam.get('centerMass');
 //console.log(urlParam.get('enableCenter', 'ori'));
 //console.log(enableCenter);
 
@@ -33,6 +34,7 @@ function distance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
+// 鼠标操作 暂时没启用
 mouse = {};
 //mouse.prototype = new Orb();
 mouse.size = 200;
@@ -104,7 +106,7 @@ eternal = new Orb();//new EternalStar();
 //eternal.init();
 var ETERNAL_ID = particles.length;
 eternal.id = particles.length;
-eternal.mass = 14800;
+eternal.mass = centerMass;
 eternal.x = w/2;
 eternal.y = h/2;
 eternal.size = 2.5;
@@ -150,6 +152,8 @@ function anim() {
     }
     hue++;
     hue %= 16000000;
+    document.getElementById('livedOrbCount').innerHTML = particles.length;
+    document.getElementById('centerMass').value = eternal.mass;
     //mouse.draw();
     //eternal.draw();
     //requestAnimationFrame(anim);

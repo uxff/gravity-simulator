@@ -7,14 +7,15 @@
 <!--参数设置-->
 <div style="position:absolute">
 <form action="" method="GET">
-<label>刷屏一次计算次数:<input type="input" name="calcTimes" id="calcTimes" value="200"/></label>
+<label>每次刷屏计算次数:<input type="input" name="calcTimes" id="calcTimes" value="200" title="每40ms绘图一次,每次绘图所有天体update次数,越大天体运动越快,cpu越繁忙,取决于cpu性能"/></label>
 <label>天体数量:<input type="input" name="maxParticles" id="maxParticles" value="8"/></label>
-<label>+中心天体:<input type="input" name="enableCenter" id="enableCenter" value="1"/></label>
+<label>+中心天体:<input type="input" name="enableCenter" id="enableCenter" value="1" title="1或0//是否启用中心大质量天体"/></label>
 <label>中心天体质量:<input type="input" name="centerMass" id="centerMass" value="15000"/></label>
 <label>其他天体质量:<input type="input" name="orbMinMass" id="orbMinMass" value="10"/>~<input type="input" name="orbMaxMass" id="orbMaxMass" value="100"/></label>
 <input type="submit" value="yes" class="btn">
-<a href="index.html">重置</a>
+<a href="index.html"><button type="button">重置</button></a>
 </form>
+当前天体数量:<span id="livedOrbCount">0</span>
 </div>
 <canvas id='canvas-club'></canvas>
 <script src="acc.js"></script>
