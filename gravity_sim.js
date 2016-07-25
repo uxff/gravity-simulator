@@ -98,11 +98,11 @@ for (var i = 1; i <= maxParticles; i++) {
         p.id = particles.length;
         p.init();
         p.mass = random(orbMinMass, orbMaxMass);
-        //tangle = i*Math.PI/maxParticles*2;
-        p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(tangle) * 0.001;//
-        p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(tangle) * 0.001;//
-        //p.x = Math.cos(tangle) * 200 + w/2;
-        //p.y = Math.sin(tangle) * 200 + h/2;
+        tangle = i*Math.PI/maxParticles*2.0;
+        p.vx =  Math.sin(tangle) * orbMaxVelo;//random(-orbMaxVelo, orbMaxVelo);//
+        p.vy = -Math.cos(tangle) * orbMaxVelo;//random(-orbMaxVelo, orbMaxVelo);//
+        p.x = Math.cos(tangle) * 300.0 + w/2.0;
+        p.y = Math.sin(tangle) * 300.0 + h/2.0;
         particles.push(p);
         //console.log(i);
     //}, i * 50);
