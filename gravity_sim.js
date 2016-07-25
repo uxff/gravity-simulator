@@ -98,8 +98,11 @@ for (var i = 1; i <= maxParticles; i++) {
         p.id = particles.length;
         p.init();
         p.mass = random(orbMinMass, orbMaxMass);
-        p.vx = random(-orbMaxVelo, orbMaxVelo);
-        p.vy = random(-orbMaxVelo, orbMaxVelo);
+        //tangle = i*Math.PI/maxParticles*2;
+        p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(tangle) * 0.001;//
+        p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(tangle) * 0.001;//
+        //p.x = Math.cos(tangle) * 200 + w/2;
+        //p.y = Math.sin(tangle) * 200 + h/2;
         particles.push(p);
         //console.log(i);
     //}, i * 50);
@@ -156,7 +159,7 @@ function anim() {
     hue++;
     hue %= 16000000;
     document.getElementById('livedOrbCount').innerHTML = particles.length;
-    document.getElementById('centerMass').value = eternal.mass;
+    document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
     //mouse.draw();
     //eternal.draw();
     //requestAnimationFrame(anim);
