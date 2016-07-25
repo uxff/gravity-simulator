@@ -104,7 +104,7 @@ Orb.prototype = {
             }
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
-            if (dist<3.0) {
+            if (dist<1.0) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);

@@ -8,7 +8,7 @@ var urlParam = new UrlSearch(); //实例化
 
 // 可配置参数
 var maxParticles = urlParam.get('maxParticles') || 10;
-var calcTimes = urlParam.get('calcTimes') || 100;
+var calcTimes = urlParam.get('calcTimes') || 400;
 var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
 var orbMinMass = urlParam.get('orbMinMass');
 var orbMaxMass = urlParam.get('orbMaxMass');
@@ -22,7 +22,7 @@ var bombs = [];
 
 var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
-var G = 0.000021;
+var G = 0.0000021;
 //G = 0.1;
 
 var clearColor = "rgba(15, 15, 15, .2)";
