@@ -38,7 +38,7 @@ Bomb.prototype.draw = function(ctx) {
         //ctx.beginPath();
         ctx.strokeStyle = "hsla(" + this.color + ", 90%, 50%, 1)";
         ctx.shadowColor = "hsla(" + this.color + ", 100%, 55%, 1)";
-        ctx.shadowBlur = 1;
+        //ctx.shadowBlur = 1;
         ctx.lineWidth = 1;
 
         for (var i=0; i<this.dots.length; ++i) {

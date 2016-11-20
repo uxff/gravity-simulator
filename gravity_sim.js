@@ -102,14 +102,14 @@ for (var i = 1; i <= maxParticles; i++) {
         tangle = i*Math.PI/maxParticles*2.0;
         switch (placeType) {
             case 2:
-                p.vx =  Math.sin(tangle) * orbMaxVelo;//random(-orbMaxVelo, orbMaxVelo);//
-                p.vy = -Math.cos(tangle) * orbMaxVelo;//random(-orbMaxVelo, orbMaxVelo);//
+                p.vx =  Math.sin(tangle) * orbMaxVelo;
+                p.vy = -Math.cos(tangle) * orbMaxVelo;
                 p.x = Math.cos(tangle) * 300.0 + w/2.0;
                 p.y = Math.sin(tangle) * 300.0 + h/2.0;
                 break;
             default:
-                p.vx =  random(-orbMaxVelo, orbMaxVelo);//
-                p.vy =  random(-orbMaxVelo, orbMaxVelo);//
+                p.vx =  Math.sin(tangle) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
+                p.vy = -Math.cos(tangle) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
                 p.x = random(120, w-120);//Math.cos(tangle) * 300.0 + w/2.0;
                 p.y = random(120, h-120);//Math.sin(tangle) * 300.0 + h/2.0;
                 break;
@@ -129,13 +129,13 @@ eternal.y = h/2;
 eternal.size = 2.5;
 
 enableCenter && particles.push(eternal);
+ctx.globalCompositeOperation = "source-over";
+ctx.shadowBlur = 1;
 
 
 function anim() {
     ctx.fillStyle = clearColor;
     ctx.shadowColor = clearColor;
-    ctx.shadowBlur = 0;
-    ctx.globalCompositeOperation = "source-over";
     ctx.fillRect(0, 0, w, h);
     //mouse.move();
 
@@ -154,6 +154,7 @@ function anim() {
             bombs.push(bomb);
             //console.log('BOMBED,p.id='+p.id);
             p.lifeStep = 3;
+            refreshPad();
             //i--;
         }
     }
@@ -169,12 +170,16 @@ function anim() {
     }
     hue+=19;
     hue %= 16000000;
-    document.getElementById('livedOrbCount').innerHTML = particles.length;
-    document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
     //mouse.draw();
     //eternal.draw();
     //requestAnimationFrame(anim);
 }
 
+function refreshPad() {
+    document.getElementById('livedOrbCount').innerHTML = particles.length;
+    document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
+}
+
 setInterval(anim, 50);
+refreshPad();
 //anim();
