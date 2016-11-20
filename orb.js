@@ -6,8 +6,8 @@ function Orb() {
     this.y = 0;
     this.vx = 0;
     this.vy = 0;
-    this.ax = 0;
-    this.ay = 0;
+    //this.ax = 0;
+    //this.ay = 0;
     this.dir = Math.PI/2;
     this.mass = 5;
     this.lifeStep = 1;// 生命阶段: 1=正常运转 2=爆炸中 3=碎片 4=死亡
@@ -60,11 +60,11 @@ Orb.prototype = {
         if (this.lifeStep!=1) {
             //console.log(' id='+this.id+' after calc all g, this.lifeStep='+this.lifeStep);
         } else {
-            this.ax = aAll.ax;
-            this.ay = aAll.ay;
+            //this.ax = aAll.ax;
+            //this.ay = aAll.ay;
 
-            this.vx += this.ax;
-            this.vy += this.ay;
+            this.vx += aAll.ax;
+            this.vy += aAll.ay;
 
             this.x += this.vx;
             this.y += this.vy;

@@ -165,5 +165,5 @@ function anim() {
     //requestAnimationFrame(anim);
 }
 
-setInterval(anim, 40);
+setInterval(anim, 50);
 //anim();
