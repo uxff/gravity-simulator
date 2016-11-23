@@ -15,8 +15,10 @@ var orbMaxMass = urlParam.get('orbMaxMass');
 var centerMass = urlParam.get('centerMass');
 var orbMaxVelo = urlParam.get('orbMaxVelo', 'float');
 var placeType  = urlParam.get('placeType');
+
 //console.log(urlParam.get('enableCenter', 'ori'));
 //console.log(enableCenter);
+var zoomBase   = document.getElementById('zoom').value;
 
 var particles = [];
 var bombs = [];
@@ -183,3 +185,15 @@ function refreshPad() {
 setInterval(anim, 50);
 refreshPad();
 //anim();
+
+var zoomStep = 1.41421356;
+$('#zoom_up').on('click', function() {
+    //var zoomVal = $('#zoom').val();
+    zoomBase = zoomBase*zoomStep;
+    $('#zoom').val(zoomBase);
+});
+$('#zoom_down').on('click', function() {
+    //var zoomVal = $('#zoom').val();
+    zoomBase = zoomBase/zoomStep;
+    $('#zoom').val(zoomBase);
+});

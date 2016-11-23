@@ -45,8 +45,9 @@ Bomb.prototype.draw = function(ctx) {
             this.dots[i].update();
             var dot = this.dots[i];
             ctx.beginPath();
-            ctx.moveTo(dot.x, dot.y);
-            ctx.lineTo(dot.x*1.0+1, dot.y*1.0+1);
+            var x = (dot.x*1.0 + (dot.x-w/2)*zoomBase), y = (dot.y*1.0 + (dot.y-h/2)*zoomBase);
+            ctx.moveTo(x, y);
+            ctx.lineTo(x*1.0+1, y*1.0+1);
             //console.log(dot);
             //ctx.closePath();
             ctx.stroke();

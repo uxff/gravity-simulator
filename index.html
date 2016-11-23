@@ -5,6 +5,7 @@
 <meta name="keywords" content="canvas,万有引力,天体运行,模拟"/>
 <meta name="description" content="使用canvas绘图模拟万有引力，可以自定义参数，发现天体运行奥秘。"/>
 </head>
+<script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <body>
 <link href="gravity_sim.css" rel="stylesheet" position="1">
 <!--参数设置-->
@@ -24,6 +25,8 @@
 中心天体质量:<span id="centerMassShow">0</span>
 <br/><br/>
 <a href="https://github.com/uxff/gravity_sim" target="_blank" style="color:white">https://github.com/uxff/gravity_sim</a>
+<br/><br/>
+Zoom: <button id="zoom_down">-</button><input id="zoom" value="1.0" readonly/><button id="zoom_up">+</button><br/>
 </div>
 <canvas id='canvas-club'></canvas>
 <script src="acc.js"></script>

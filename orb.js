@@ -33,7 +33,8 @@ Orb.prototype = {
             //ctx.shadowBlur = this.size * 1;
             ctx.beginPath();
 
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
+            var x = (this.x*1.0 + (this.x-w/2)*zoomBase), y = (this.y*1.0 + (this.y-h/2)*zoomBase);
+            ctx.arc(x, y, this.size, 0, Math.PI*2 , false); 
 
             ctx.closePath();
             ctx.lineWidth = 1;
