@@ -14,8 +14,8 @@ function Orb() {
 }
 Orb.prototype = {
     init: function() {
-        this.x = random(20, w-20);//w/2-10.0;//
-        this.y = random(20, h-20);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
+        //this.x = random(w/4, w-w/4);//w/2-10.0;//
+        //this.y = random(h/4, h-h/4);//0;//Math.random() > .5 ? -this.size : h + this.size;h/2;//
         this.vx = random(-0.02, 0.02);//(h/2+200)/(h/2-this.y)*0.00514;//0;//
         this.vy = random(-0.02, 0.02);//0;//0;//
         //this.mass = random(11, 88);
@@ -31,13 +31,13 @@ Orb.prototype = {
             ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
             ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
             //ctx.shadowBlur = this.size * 1;
+            //ctx.lineWidth = 1;
             ctx.beginPath();
 
             var x = (this.x*1.0 + (this.x-w/2)*zoomBase), y = (this.y*1.0 + (this.y-h/2)*zoomBase);
             ctx.arc(x, y, this.size, 0, Math.PI*2 , false); 
 
             ctx.closePath();
-            ctx.lineWidth = 1;
             ctx.stroke();
 
         }
