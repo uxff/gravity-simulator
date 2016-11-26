@@ -123,7 +123,7 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
                     var tdir = Math.random()*Math.PI*2;
                     p.x = Math.random()*h/4.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
                     p.y = Math.random()*h/4.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
-                    console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
+                    //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
                     break;
             }
             particles.push(p);
@@ -187,7 +187,9 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 
     function refreshPad() {
         document.getElementById('livedOrbCount').innerHTML = particles.length;
-        document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
+        if (enableCenter) {
+            document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
+        }
     }
 
     //anim();
