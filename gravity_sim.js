@@ -9,11 +9,11 @@ var distance = function (x1, y1, x2, y2) {
 var w;//= c.width = window.innerWidth;
 var h;//= c.height = window.innerHeight;
 var ctx;// = c.getContext("2d");
-var zoomBase = 1, zoomReduct = 1;// = document.getElementById('zoom').value;
+var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
 var particles = [];
 var bombs = [];
 var anim;
-//var PI = 3.1415926535898;
+var zoomStep = 1.41421356;
 
 var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
@@ -23,12 +23,14 @@ var G = 0.0000021;
 var clearColor = "rgba(15, 15, 15, .2)";
 
 window.onload = function () {
-window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
+    window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
 
     var c = document.getElementById("canvas-club");
     w= c.width = window.innerWidth;
     h = c.height = window.innerHeight;
     ctx = c.getContext("2d");
+    ctx.globalCompositeOperation = "source-over";
+    ctx.shadowBlur = 1;
     zoomBase = document.getElementById('zoom').value;
     var urlParam = new UrlSearch(); //实例化
 
@@ -123,8 +125,8 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
                     p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(vdir) * orbMaxVelo;// 
                     p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(vdir) * orbMaxVelo;// 
                     // 圆形区域分布
-                    p.x = trandom*h/4.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
-                    p.y = trandom*h/4.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
+                    p.x = trandom*h/2.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
+                    p.y = trandom*h/2.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
                     //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
                     break;
             }
@@ -207,12 +209,6 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 
     //anim();
 
-    var zoomStep = 1.41421356;
-    w = c.width = window.innerWidth;
-    h = c.height = window.innerHeight;
-    ctx = c.getContext("2d");
-    ctx.globalCompositeOperation = "source-over";
-    ctx.shadowBlur = 1;
 
     $(function(){
         $('#zoom_up').on('click', function() {

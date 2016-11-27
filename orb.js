@@ -34,7 +34,9 @@ Orb.prototype = {
             //ctx.lineWidth = 1;
             ctx.beginPath();
 
-            var x = (this.x*1.0 + (this.x-w/2)*zoomBase), y = (this.y*1.0 + (this.y-h/2)*zoomBase);
+            //var x = (this.x*1.0 + (this.x-w/2)*zoomBase), y = (this.y*1.0 + (this.y-h/2)*zoomBase);
+            var x = (w/2.0 + (this.x-w/2)*zoomBase), y = (h/2.0 + (this.y-h/2)*zoomBase);
+            //var x = this.x, y = this.y;
             ctx.arc(x, y, this.size, 0, Math.PI*2 , false); 
             //ctx.moveTo(x, y);
             //ctx.lineTo(w/2.0, h/2.0);

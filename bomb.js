@@ -6,8 +6,8 @@ function BombDot(x, y) {
     this.dir = 0;
 }
 BombDot.prototype.init = function() {
-    this.dir = Math.random()*Math.PI*2;
-    this.a = 0.5 + Math.random()*1.5;
+    this.dir = Math.random()*Math.PI*2.0;
+    this.a = 0.5 + Math.random()*2.5;
     this.vx = this.a * Math.cos(this.dir);
     this.vy = this.a * Math.sin(this.dir);
 }
@@ -45,7 +45,8 @@ Bomb.prototype.draw = function(ctx) {
             this.dots[i].update();
             var dot = this.dots[i];
             ctx.beginPath();
-            var x = (dot.x*1.0 + (dot.x-w/2)*zoomBase), y = (dot.y*1.0 + (dot.y-h/2)*zoomBase);
+            //var x = (dot.x*1.0 + (dot.x-w/2)*zoomBase), y = (dot.y*1.0 + (dot.y-h/2)*zoomBase);
+            var x = (w/2.0 + (dot.x-w/2)*zoomBase), y = (h/2.0 + (dot.y-h/2)*zoomBase);
             ctx.moveTo(x, y);
             ctx.lineTo(x*1.0+1, y*1.0+1);
             //console.log(dot);
