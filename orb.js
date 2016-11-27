@@ -41,7 +41,7 @@ Orb.prototype = {
             //ctx.moveTo(x, y);
             //ctx.lineTo(w/2.0, h/2.0);
 
-            ctx.closePath();
+            //ctx.closePath();
             ctx.stroke();
 
         }

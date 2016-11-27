@@ -177,6 +177,8 @@ window.onload = function () {
             var b = bombs[i];
             b.draw(ctx);
         }
+
+        ctx.closePath();
         hue+=19;
         hue %= 16000000;
         //mouse.draw();

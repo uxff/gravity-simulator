@@ -7,7 +7,7 @@ function BombDot(x, y) {
 }
 BombDot.prototype.init = function() {
     this.dir = Math.random()*Math.PI*2.0;
-    this.a = 0.5 + Math.random()*2.5;
+    this.a = 1.0 + Math.random()*5.0;
     this.vx = this.a * Math.cos(this.dir);
     this.vy = this.a * Math.sin(this.dir);
 }
@@ -35,23 +35,23 @@ Bomb.prototype.init = function() {
 Bomb.prototype.draw = function(ctx) {
     if (this.lifetime++<this.maxLifetime) {
         
-        //ctx.beginPath();
         ctx.strokeStyle = "hsla(" + this.color + ", 90%, 50%, 1)";
         ctx.shadowColor = "hsla(" + this.color + ", 100%, 55%, 1)";
         //ctx.shadowBlur = 1;
         //ctx.lineWidth = 1;
 
         for (var i=0; i<this.dots.length; ++i) {
-            this.dots[i].update();
             var dot = this.dots[i];
             ctx.beginPath();
             //var x = (dot.x*1.0 + (dot.x-w/2)*zoomBase), y = (dot.y*1.0 + (dot.y-h/2)*zoomBase);
             var x = (w/2.0 + (dot.x-w/2)*zoomBase), y = (h/2.0 + (dot.y-h/2)*zoomBase);
             ctx.moveTo(x, y);
-            ctx.lineTo(x*1.0+1, y*1.0+1);
+            //ctx.lineTo(x*1.0+1, y*1.0+1);
+            ctx.lineTo(x*1.0+dot.vx, y*1.0+dot.vy);
             //console.log(dot);
             //ctx.closePath();
             ctx.stroke();
+            this.dots[i].update();
         }
         //ctx.moveTo(this.x, this.y);
         
