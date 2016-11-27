@@ -21,11 +21,11 @@ function Bomb(x, y, color) {
     this.color = color;
     this.dots = [];
     this.lifetime = 0;
-    this.maxLifetime = 30;
+    this.maxLifetime = 12;
 }
 
 Bomb.prototype.init = function() {
-    var len = 5 + Math.random()*20;
+    var len = 5 + Math.random()*8;
     for (var i=0; i<len; ++i) {
         var dot = new BombDot(this.x, this.y);
         dot.init();

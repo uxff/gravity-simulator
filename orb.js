@@ -113,6 +113,7 @@ Orb.prototype = {
                     // 动量守恒定律:   m1v1+m2v2=m1v1ˊ+m2v2ˊ
                     // m1v1+m2v2 = m3v3; v3=(m1v1+m2v2)/m3
                     this.mass += target.mass;
+                    //this.size += 0.5;
                     //console.log(' target '+target.id+' will be eaten by '+this.id+'! before bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+this.vx);
                     this.vx = (target.mass*target.vx+this.mass*this.vx)/this.mass;
                     this.vy = (target.mass*target.vy+this.mass*this.vy)/this.mass;
@@ -123,9 +124,11 @@ Orb.prototype = {
                     //this.ay -= target.ay;
                     target.mass = 0;
                     target.lifeStep = 2;
+                    //console.log('this('+this.id+') combined target('+target.id+')');
                 } else {
                     //console.log('ME is less mass , will bomb! id='+this.id+' crash on id='+target.id);
                     target.mass += this.mass;
+                    //target.size += 0.5;
                     //console.log(' this '+this.id+' will be eaten by '+target.id+'! before bomb, this.vx='+this.vx+' target.vx='+target.vx +' monster.vx='+target.vx);
                     target.vx = (target.mass*target.vx+this.mass*this.vx)/target.mass;
                     target.vy = (target.mass*target.vy+this.mass*this.vy)/target.mass;
@@ -135,6 +138,7 @@ Orb.prototype = {
                     //target.ay -= this.ay;
                     this.mass = 0;
                     this.lifeStep = 2;
+                    //console.log('target('+target.id+') combined this('+this.id+')');
                 }
             } else {
                 var gtmp = this.calcGravity(target, dist);

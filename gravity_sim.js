@@ -117,10 +117,10 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
                     p.y = Math.sin(tangle) * 300.0 + h/2.0;
                     break;
                 default:
-                    p.vx =  Math.sin(tangle) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
-                    p.vy = -Math.cos(tangle) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
+                    var tdir = Math.random()*Math.PI*2, vdir = Math.random()*Math.PI*2;
+                    p.vx =  Math.sin(vdir) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
+                    p.vy = -Math.cos(vdir) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
                     // 圆形区域分布
-                    var tdir = Math.random()*Math.PI*2;
                     p.x = Math.random()*h/4.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
                     p.y = Math.random()*h/4.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
                     //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
@@ -130,6 +130,7 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
             //console.log(i);
         //}, i * 50);
     }
+
 
     eternal = new Orb();//new EternalStar();
     //eternal.init();
@@ -168,12 +169,6 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
                 //i--;
             }
         }
-        for (var i=0; i<particles.length; ++i) {
-            if (particles[i].lifeStep==3) {
-                particles.splice(i, 1);
-                --i;
-            }
-        }
         for (var i in bombs) {
             var b = bombs[i];
             b.draw(ctx);
@@ -186,10 +181,26 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
     }
 
     function refreshPad() {
+        // 清理多余的particles
+        for (var i=0; i<particles.length; ++i) {
+            if (particles[i].lifeStep==3) {
+                particles.splice(i, 1);
+                --i;
+            }
+        }
+        // 清理多余的爆炸碎屑
+        for (var i=0; i<bombs.length; ++i) {
+            if (bombs[i].lifetime>=bombs[i].maxLifetime) {
+                bombs.splice(i, 1);
+                --i;
+            }
+        }
+        // 刷新面板
         document.getElementById('livedOrbCount').innerHTML = particles.length;
         if (enableCenter) {
             document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
         }
+        //console.log('now='+particles.length+' b='+bombs.length);
     }
 
     //anim();
