@@ -12,6 +12,8 @@ var ctx;// = c.getContext("2d");
 var zoomBase = 1, zoomReduct = 1;// = document.getElementById('zoom').value;
 var particles = [];
 var bombs = [];
+var anim;
+//var PI = 3.1415926535898;
 
 var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
@@ -117,12 +119,12 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
                     p.y = Math.sin(tangle) * 300.0 + h/2.0;
                     break;
                 default:
-                    var tdir = Math.random()*Math.PI*2, vdir = Math.random()*Math.PI*2;
-                    p.vx =  Math.sin(vdir) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
-                    p.vy = -Math.cos(vdir) * orbMaxVelo;// random(-orbMaxVelo, orbMaxVelo);//
+                    var tdir = Math.random()*2.0*Math.PI, trandom = Math.random();
+                    p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(vdir) * orbMaxVelo;// 
+                    p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(vdir) * orbMaxVelo;// 
                     // 圆形区域分布
-                    p.x = Math.random()*h/4.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
-                    p.y = Math.random()*h/4.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
+                    p.x = trandom*h/4.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
+                    p.y = trandom*h/4.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
                     //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
                     break;
             }
@@ -144,7 +146,7 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
     enableCenter && particles.push(eternal);
 
 
-    function anim() {
+    anim = function() {
         ctx.fillStyle = clearColor;
         ctx.shadowColor = clearColor;
         ctx.fillRect(0, 0, w, h);
