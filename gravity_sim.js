@@ -13,7 +13,7 @@ var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
 var particles = [];
 var bombs = [];
 var anim;
-var zoomStep = 1.41421356;
+var zoomStep = Math.sqert(2.0);//1.414213562373;
 
 var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
