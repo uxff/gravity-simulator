@@ -10,10 +10,11 @@ var w;//= c.width = window.innerWidth;
 var h;//= c.height = window.innerHeight;
 var ctx;// = c.getContext("2d");
 var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
-var particles = [];
+var particles = [], eternal, ETERNAL_ID;
 var bombs = [];
-var anim;
-var zoomStep = Math.sqert(2.0);//1.414213562373;
+var anim, refreshPad, initOrbs;
+var zoomStep = Math.sqrt(2.0);//1.414213562373;
+//var , 
 
 var hue = Math.random()*100+20;
 // 万有引力系数 G 决定引力大小
@@ -21,6 +22,18 @@ var G = 0.0000021;
 //G = 0.1;
 
 var clearColor = "rgba(15, 15, 15, .2)";
+var urlParam = new UrlSearch(); //实例化
+
+// 可配置参数
+var maxParticles = urlParam.get('maxParticles') || 10;
+var calcTimes = urlParam.get('calcTimes') || 400;
+var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
+var orbMinMass = urlParam.get('orbMinMass');
+var orbMaxMass = urlParam.get('orbMaxMass');
+var centerMass = urlParam.get('centerMass');
+var orbMaxVelo = urlParam.get('orbMaxVelo', 'float');
+var arrangeType  = urlParam.get('arrangeType');
+
 
 window.onload = function () {
     window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
@@ -30,20 +43,8 @@ window.onload = function () {
     h = c.height = window.innerHeight;
     ctx = c.getContext("2d");
     ctx.globalCompositeOperation = "source-over";
-    ctx.shadowBlur = 1;
+    ctx.shadowBlur = 0;
     zoomBase = document.getElementById('zoom').value;
-    var urlParam = new UrlSearch(); //实例化
-
-    // 可配置参数
-    var maxParticles = urlParam.get('maxParticles') || 10;
-    var calcTimes = urlParam.get('calcTimes') || 400;
-    var enableCenter = urlParam.get('enableCenter') ? 1 : 0;
-    var orbMinMass = urlParam.get('orbMinMass');
-    var orbMaxMass = urlParam.get('orbMaxMass');
-    var centerMass = urlParam.get('centerMass');
-    var orbMaxVelo = urlParam.get('orbMaxVelo', 'float');
-    var arrangeType  = urlParam.get('arrangeType');
-
     //console.log(urlParam.get('enableCenter', 'ori'));
     //console.log(enableCenter);
 
@@ -106,71 +107,77 @@ window.onload = function () {
         h = c.height = window.innerHeight;
     });
 
-    for (var i = 1; i <= maxParticles; i++) {
-        //setTimeout(function() {
-            var p = new Orb();
-            p.id = particles.length;
-            p.init();
-            p.mass = random(orbMinMass, orbMaxMass);
-            tangle = i*Math.PI/maxParticles*2.0;
-            switch (arrangeType) {
-                case 2:
-                    p.vx =  Math.sin(tangle) * orbMaxVelo;
-                    p.vy = -Math.cos(tangle) * orbMaxVelo;
-                    p.x = Math.cos(tangle) * 300.0 + w/2.0;
-                    p.y = Math.sin(tangle) * 300.0 + h/2.0;
-                    break;
-                default:
-                    var tdir = Math.random()*2.0*Math.PI, trandom = Math.random();
-                    p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(vdir) * orbMaxVelo;// 
-                    p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(vdir) * orbMaxVelo;// 
-                    // 圆形区域分布
-                    p.x = trandom*h/2.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
-                    p.y = trandom*h/2.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
-                    //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
-                    break;
-            }
-            particles.push(p);
-            //console.log(i);
-        //}, i * 50);
+    initOrbs = function(num) {
+        particles = [];
+        for (var i = 1; i <= num; i++) {
+            //setTimeout(function() {
+                var p = new Orb();
+                p.id = particles.length;
+                p.init();
+                p.mass = random(orbMinMass, orbMaxMass);
+                tangle = i*Math.PI/num*2.0;
+                switch (arrangeType) {
+                    case 2:
+                        p.vx =  Math.sin(tangle) * orbMaxVelo;
+                        p.vy = -Math.cos(tangle) * orbMaxVelo;
+                        p.x = Math.cos(tangle) * 300.0 + w/2.0;
+                        p.y = Math.sin(tangle) * 300.0 + h/2.0;
+                        break;
+                    default:
+                        var tdir = Math.random()*2.0*Math.PI, trandom = Math.random();
+                        p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(vdir) * orbMaxVelo;// 
+                        p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(vdir) * orbMaxVelo;// 
+                        // 圆形区域分布
+                        p.x = trandom*h/2.0 * Math.cos(tdir) + w/2.0;//random(w/3.0, w/3.0*2);//Math.cos(tangle) * 300.0 + w/2.0;//
+                        p.y = trandom*h/2.0 * Math.sin(tdir) + h/2.0;//random(h/3.0, h/3.0*2);//Math.sin(tangle) * 300.0 + h/2.0;//
+                        //console.log('h='+h+' w='+w+' p.x='+p.x+' p.y='+p.y);
+                        break;
+                }
+                particles.push(p);
+                //console.log(i);
+            //}, i * 50);
+        }
+
+
+        eternal = new Orb();//new EternalStar();
+        //eternal.init();
+        ETERNAL_ID = particles.length;
+        eternal.id = particles.length;
+        eternal.mass = centerMass;
+        eternal.x = w/2;
+        eternal.y = h/2;
+        eternal.size = 2.5;
+
+        enableCenter && particles.push(eternal);
     }
 
 
-    eternal = new Orb();//new EternalStar();
-    //eternal.init();
-    ETERNAL_ID = particles.length;
-    eternal.id = particles.length;
-    eternal.mass = centerMass;
-    eternal.x = w/2;
-    eternal.y = h/2;
-    eternal.size = 2.5;
-
-    enableCenter && particles.push(eternal);
-
-
-    anim = function() {
+    anim = function(nTimes) {
+        nTimes = nTimes || calcTimes;
         ctx.fillStyle = clearColor;
         ctx.shadowColor = clearColor;
         ctx.fillRect(0, 0, w, h);
         //mouse.move();
 
-        for (var i=0; i<particles.length; ++i) {
-            var p = particles[i];
-            //console.log(i);
-            p.draw(ctx);
-            if (p.id != ETERNAL_ID)//最后一颗恒星不计算位移,不移动
-            for (var k=0; k<calcTimes; ++k) {
-                p.update(particles);
-            }
-            if (p.lifeStep==2) {
-                var bomb = new Bomb(p.x, p.y, p.hue);
-                bomb.pid = p.id;
-                bomb.init();
-                bombs.push(bomb);
-                //console.log('BOMBED,p.id='+p.id);
-                p.lifeStep = 3;
-                refreshPad();
-                //i--;
+        for (var k=0; k<nTimes; ++k) {
+            for (var i=0; i<particles.length; ++i) {
+                var p = particles[i];
+                //console.log(i);
+                p.draw(ctx);
+                if (p.id != ETERNAL_ID) {
+                    //最后一颗恒星不计算位移,不移动
+                    p.update(particles);
+                }
+                if (p.lifeStep==2) {
+                    var bomb = new Bomb(p.x, p.y, p.hue);
+                    bomb.pid = p.id;
+                    bomb.init();
+                    bombs.push(bomb);
+                    //console.log('BOMBED,p.id='+p.id);
+                    p.lifeStep = 3;
+                    //i--;
+                }
+                ctx.closePath();
             }
         }
         for (var i in bombs) {
@@ -178,7 +185,8 @@ window.onload = function () {
             b.draw(ctx);
         }
 
-        ctx.closePath();
+        //console.log(nTimes+' times done.');
+        refreshPad();
         hue+=19;
         hue %= 16000000;
         //mouse.draw();
@@ -186,7 +194,7 @@ window.onload = function () {
         //requestAnimationFrame(anim);
     }
 
-    function refreshPad() {
+    refreshPad = function() {
         // 清理多余的particles
         for (var i=0; i<particles.length; ++i) {
             if (particles[i].lifeStep==3) {
@@ -227,7 +235,8 @@ window.onload = function () {
         });
     })
 
-    setInterval(anim, 50);
+    initOrbs(maxParticles);
     refreshPad();
+    setInterval('anim(calcTimes)', 50);
 
 }
