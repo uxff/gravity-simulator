@@ -12,7 +12,7 @@ var ctx;// = c.getContext("2d");
 var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
 var particles = [], eternal, ETERNAL_ID;
 var bombs = [];
-var anim, refreshPad, initOrbs;
+var anim, refreshPad, initOrbs, updateOrbs;
 var zoomStep = Math.sqrt(2.0);//1.414213562373;
 //var , 
 
@@ -44,6 +44,8 @@ window.onload = function () {
     ctx = c.getContext("2d");
     ctx.globalCompositeOperation = "source-over";
     ctx.shadowBlur = 0;
+    ctx.fillStyle = clearColor;
+    ctx.shadowColor = clearColor;
     zoomBase = document.getElementById('zoom').value;
     //console.log(urlParam.get('enableCenter', 'ori'));
     //console.log(enableCenter);
@@ -151,19 +153,13 @@ window.onload = function () {
         enableCenter && particles.push(eternal);
     }
 
-
-    anim = function(nTimes) {
+    updateOrbs = function(nTimes) {
         nTimes = nTimes || calcTimes;
-        ctx.fillStyle = clearColor;
-        ctx.shadowColor = clearColor;
-        ctx.fillRect(0, 0, w, h);
-        //mouse.move();
-
+        
         for (var k=0; k<nTimes; ++k) {
             for (var i=0; i<particles.length; ++i) {
                 var p = particles[i];
                 //console.log(i);
-                p.draw(ctx);
                 if (p.id != ETERNAL_ID) {
                     //最后一颗恒星不计算位移,不移动
                     p.update(particles);
@@ -176,18 +172,38 @@ window.onload = function () {
                     //console.log('BOMBED,p.id='+p.id);
                     p.lifeStep = 3;
                     //i--;
+                    refreshPad();
                 }
-                ctx.closePath();
             }
         }
+    }
+
+    anim = function() {
+        updateOrbs(calcTimes);
+
+        ctx.fillRect(0, 0, w, h);
+        //ctx.lineWidth = 1;
+        //ctx.beginPath();
+        
+        //mouse.move();
+
+        for (var i in particles) {
+            var p = particles[i];
+            p.draw(ctx);
+        }
+        //ctx.closePath();
+        //ctx.stroke();
+        
         for (var i in bombs) {
             var b = bombs[i];
             b.draw(ctx);
         }
+        //ctx.closePath();
+        //ctx.stroke();
 
         //console.log(nTimes+' times done.');
-        refreshPad();
-        hue+=19;
+        //refreshPad();
+        hue+=29;
         hue %= 16000000;
         //mouse.draw();
         //eternal.draw();
@@ -235,8 +251,10 @@ window.onload = function () {
         });
     })
 
+
     initOrbs(maxParticles);
     refreshPad();
-    setInterval('anim(calcTimes)', 50);
+    //setTimeout('updateOrbs(calcTimes*100000000)', 100);
+    setInterval('anim()', 50);
 
 }

@@ -29,9 +29,8 @@ Orb.prototype = {
         if (this.lifeStep==1) {
 
             ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
-            ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
-            //ctx.shadowBlur = this.size * 1;
-            //ctx.lineWidth = 1;
+            //ctx.shadowColor = "hsla(" + this.hue + ", 100%, 55%, 1)";
+            //ctx.lineWidth = 2;
             ctx.beginPath();
 
             //var x = (this.x*1.0 + (this.x-w/2)*zoomBase), y = (this.y*1.0 + (this.y-h/2)*zoomBase);
@@ -39,11 +38,11 @@ Orb.prototype = {
             //var x = this.x, y = this.y;
             ctx.arc(x, y, this.size, 0, Math.PI*2 , false); 
             //ctx.moveTo(x, y);
+            //ctx.lineTo(x+this.vx, y+this.vy);
             //ctx.lineTo(w/2.0, h/2.0);
 
-            //ctx.closePath();
+            ctx.closePath();
             ctx.stroke();
-
         }
     },
 

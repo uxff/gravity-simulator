@@ -36,28 +36,22 @@ Bomb.prototype.draw = function(ctx) {
     if (this.lifetime++<this.maxLifetime) {
         
         ctx.strokeStyle = "hsla(" + this.color + ", 90%, 50%, 1)";
-        ctx.shadowColor = "hsla(" + this.color + ", 100%, 55%, 1)";
-        //ctx.shadowBlur = 1;
-        //ctx.lineWidth = 1;
+        //ctx.shadowColor = "hsla(" + this.color + ", 100%, 55%, 1)";
 
+        ctx.beginPath();
         for (var i=0; i<this.dots.length; ++i) {
             var dot = this.dots[i];
-            ctx.beginPath();
             //var x = (dot.x*1.0 + (dot.x-w/2)*zoomBase), y = (dot.y*1.0 + (dot.y-h/2)*zoomBase);
             var x = (w/2.0 + (dot.x-w/2)*zoomBase), y = (h/2.0 + (dot.y-h/2)*zoomBase);
             ctx.moveTo(x, y);
             //ctx.lineTo(x*1.0+1, y*1.0+1);
             ctx.lineTo(x*1.0+dot.vx, y*1.0+dot.vy);
             //console.log(dot);
-            //ctx.closePath();
-            ctx.stroke();
             this.dots[i].update();
         }
         //ctx.moveTo(this.x, this.y);
-        
-        //ctx.arc(this.x, this.y, this.size, 0, Math.PI*2 , false); 
-
-        //ctx.closePath();
+        ctx.closePath();
+        ctx.stroke();
     }
 
 }
