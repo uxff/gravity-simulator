@@ -93,7 +93,9 @@ Orb.prototype = {
         // 这里计算加速度 所以约分去掉了本对象的质量
         var force = target.mass / (dist*dist) * G;
         var g = new Acc(force);
-        g.dir = this.calcRelativePos(target);
+        //g.dir = this.calcRelativePos(target);
+        g.ax = force * (this.x - target.x) / dist;
+        g.ay = force * (this.y - target.y) / dist;
         //console.log(g);
         return g;
     },
@@ -145,7 +147,7 @@ Orb.prototype = {
                 }
             } else {
                 var gtmp = this.calcGravity(target, dist);
-                gtmp.parseXY();
+                //gtmp.parseXY();
                 //console.log(gtmp);
                 g.ax += gtmp.ax;
                 g.ay += gtmp.ay;
