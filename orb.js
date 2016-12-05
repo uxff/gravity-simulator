@@ -85,17 +85,14 @@ Orb.prototype = {
     */
     calcGravity: function(target, dist) {
         //var dist = distance(this.x, this.y, target.x, target.y);
-        if (dist<1) {
-            return new Acc(0);
-        }
         // 万有引力公式
         // F = M1*M2 / (r*r) * G
         // 这里计算加速度 所以约分去掉了本对象的质量
         var force = target.mass / (dist*dist) * G;
         var g = new Acc(force);
         //g.dir = this.calcRelativePos(target);
-        g.ax = force * (this.x - target.x) / dist;
-        g.ay = force * (this.y - target.y) / dist;
+        g.ax = - force * (this.x - target.x) / dist;
+        g.ay = - force * (this.y - target.y) / dist;
         //console.log(g);
         return g;
     },
@@ -110,7 +107,7 @@ Orb.prototype = {
             }
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
-            if (dist<1.0) {
+            if (dist<2.0) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
