@@ -157,23 +157,13 @@ window.onload = function () {
         nTimes = nTimes || calcTimes;
         
         for (var k=0; k<nTimes; ++k) {
-            for (var i=0; i<particles.length; ++i) {
+            for (var i=0; i<particles.length-1; ++i) {
                 var p = particles[i];
                 //console.log(i);
-                if (p.id != ETERNAL_ID) {
+                //if (p.id != ETERNAL_ID) {
                     //最后一颗恒星不计算位移,不移动
                     p.update(particles);
-                }
-                if (p.lifeStep==2) {
-                    var bomb = new Bomb(p.x, p.y, p.hue);
-                    bomb.pid = p.id;
-                    bomb.init();
-                    bombs.push(bomb);
-                    //console.log('BOMBED,p.id='+p.id);
-                    p.lifeStep = 3;
-                    //i--;
-                    refreshPad();
-                }
+                //}
             }
         }
     }
@@ -190,6 +180,16 @@ window.onload = function () {
         for (var i in particles) {
             var p = particles[i];
             p.draw(ctx);
+            if (p.lifeStep==2) {
+                var bomb = new Bomb(p.x, p.y, p.hue);
+                bomb.pid = p.id;
+                bomb.init();
+                bombs.push(bomb);
+                //console.log('BOMBED,p.id='+p.id);
+                p.lifeStep = 3;
+                //i--;
+                refreshPad();
+            }
         }
         //ctx.closePath();
         //ctx.stroke();
