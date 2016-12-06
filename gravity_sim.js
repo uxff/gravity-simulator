@@ -13,7 +13,7 @@ var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
 var particles = [], eternal, ETERNAL_ID;
 var bombs = [];
 var anim, refreshPad, initOrbs, updateOrbs;
-var zoomStep = Math.sqrt(2.0);//1.414213562373;
+var zoomStep = Math.sqrt(2.0), timesCalced = 0, cps = 0, startTimestamp = 0, nowTimestamp = 1, calcStep = 0;//1.414213562373;
 //var , 
 
 var hue = Math.random()*100+20;
@@ -47,6 +47,7 @@ window.onload = function () {
     ctx.fillStyle = clearColor;
     ctx.shadowColor = clearColor;
     zoomBase = document.getElementById('zoom').value;
+    startTimestamp = new Date().getTime();//当前毫秒时间戳
     //console.log(urlParam.get('enableCenter', 'ori'));
     //console.log(enableCenter);
 
@@ -165,10 +166,12 @@ window.onload = function () {
                     p.update(particles);
                 //}
             }
+            timesCalced += particles.length * particles.length;
         }
     }
 
     anim = function() {
+        ++calcStep;
         updateOrbs(calcTimes);
 
         ctx.fillRect(0, 0, w, h);
@@ -208,6 +211,16 @@ window.onload = function () {
         //mouse.draw();
         //eternal.draw();
         //requestAnimationFrame(anim);
+        if (calcStep %20 == 19) {
+            // 计算cps
+            nowTimestamp = new Date().getTime();
+            var timeUsed = nowTimestamp - startTimestamp;
+            cps =  timesCalced/ (timeUsed/1000.0);
+            document.getElementById('cps').innerHTML = cps.toFixed(2);
+
+            timesCalced = 0;
+            startTimestamp = nowTimestamp-1;
+        }
     }
 
     refreshPad = function() {
@@ -230,7 +243,10 @@ window.onload = function () {
         if (enableCenter) {
             document.getElementById('centerMassShow').innerHTML = eternal.mass.toFixed(2);
         }
+            
+        // 计算完之后清楚
         //console.log('now='+particles.length+' b='+bombs.length);
+        requestAnimationFrame(refreshPad);
     }
 
     //anim();
