@@ -9,11 +9,11 @@ var distance = function (x1, y1, x2, y2) {
 var w;//= c.width = window.innerWidth;
 var h;//= c.height = window.innerHeight;
 var ctx;// = c.getContext("2d");
-var zoomBase = 1.0, zoomReduct = 1.0;// = document.getElementById('zoom').value;
+var zoomBase = 1.0, zoomStep = Math.sqrt(2.0);// = document.getElementById('zoom').value;
 var particles = [], eternal, ETERNAL_ID;
 var bombs = [];
 var anim, refreshPad, initOrbs, updateOrbs;
-var zoomStep = Math.sqrt(2.0), timesCalced = 0, cps = 0, startTimestamp = 0, nowTimestamp = 1, calcStep = 0;//1.414213562373;
+var timesCalced = 0, cps = 0, startTimestamp = 0, nowTimestamp = 1, calcStep = 0;//1.414213562373;
 //var , 
 
 var hue = Math.random()*100+20;
@@ -200,15 +200,11 @@ window.onload = function () {
 
     $(function(){
         $('#zoom_up').on('click', function() {
-            //var zoomVal = $('#zoom').val();
             zoomBase = zoomBase*zoomStep;
-            zoomReduct = zoomReduct/zoomStep;
             $('#zoom').val(zoomBase);
         });
         $('#zoom_down').on('click', function() {
-            //var zoomVal = $('#zoom').val();
             zoomBase = zoomBase/zoomStep;
-            zoomReduct = zoomReduct*zoomStep;
             $('#zoom').val(zoomBase);
         });
     })
