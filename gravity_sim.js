@@ -51,60 +51,6 @@ window.onload = function () {
     //console.log(urlParam.get('enableCenter', 'ori'));
     //console.log(enableCenter);
 
-
-
-    // 鼠标操作 暂时没启用
-    mouse = {};
-    //mouse.prototype = new Orb();
-    mouse.size = 200;
-    mouse.x = mouse.tx = w / 2;
-    mouse.y = mouse.ty = h / 2;
-    mouse.draw = function () {
-        //ctx.strokeStyle = "hsla(" + this.hue + ", 90%, 50%, 1)";
-        ctx.shadowColor = 'rgba(255,255,0,1)';//"hsla(" + 100 + ", 100%, 55%, 1)";
-        //ctx.shadowBlur = this.size * 2;
-        ctx.beginPath();
-
-        //ctx.moveTo(this.x, this.y);
-        ctx.arc(this.x, this.y, 10, 0, Math.PI*2 , false); 
-
-        ctx.closePath();
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-    }
-
-    mouse.move = function() {
-        if (!distance(mouse.x, mouse.y, mouse.tx, mouse.ty) <= .1) {
-            mouse.x += (mouse.tx - mouse.x) * .2;
-            mouse.y += (mouse.ty - mouse.y) * .2;
-        }
-    };
-
-    mouse.touches = function(e) {
-        var touches = e.touches;
-        if (touches) {
-            mouse.tx = touches[0].clientX;
-            mouse.ty = touches[0].clientY;
-        } else {
-            mouse.tx = e.clientX;
-            mouse.ty = e.clientY;
-        }
-        e.preventDefault();
-    };
-
-    mouse.mouseleave = function(e) {
-        mouse.tx = w / 2;
-        mouse.ty = h / 2;
-    };
-
-    //window.addEventListener("mousemove", mouse.touches);
-    //window.addEventListener("click", mouse.touches);
-    //window.addEventListener("touchstart", mouse.touches);
-    //window.addEventListener("touchmove", mouse.touches)
-
-    //c.addEventListener("mouseleave", mouse.mouseleave)
-
     window.addEventListener("resize", function() {
         w = c.width = window.innerWidth;
         h = c.height = window.innerHeight;

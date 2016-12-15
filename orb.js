@@ -52,15 +52,6 @@ Orb.prototype = {
         var aAll = this.calcGravityAll(particles);
         //aAll.parseXY();
 
-        //var a = this.calcGravity(eternal);
-        //a.parseXY();
-        //this.ax = aAll.ax*1.0+a.ax;
-        //this.ay = aAll.ay*1.0+a.ay;
-        //if (this.lifeStep==10) {
-        //    this.lifeStep = 1;
-        //}
-        //else {
-        //}
         if (this.lifeStep!=1) {
             //console.log(' id='+this.id+' after calc all g, this.lifeStep='+this.lifeStep);
         } else {
