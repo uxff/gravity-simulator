@@ -99,7 +99,7 @@ Orb.prototype = {
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
 
-            if (dist<2.0) {
+            if (dist<1.0 || dist*dist < (target.vx*target.vx + target.vy*target.vy)) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
@@ -134,11 +134,6 @@ Orb.prototype = {
                     this.lifeStep = 2;
                     //console.log('target('+target.id+') combined this('+this.id+')');
                 }
-            } else if (dist*dist < (target.vx* target.vx + target.vy*target.vy)) {
-                // 速度太快，超过距离，视为被撕裂
-                this.mass += target.mass;
-                target.mass = 0;
-                target.lifeStep = 2;
             } else {
                 var gtmp = this.calcGravity(target, dist);
                 //gtmp.parseXY();
