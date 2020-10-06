@@ -87,6 +87,22 @@ Orb.prototype = {
         //console.log(g);
         return g;
     },
+    /*
+        return Acc obj
+    */
+    calcRepulsion: function(target, dist) {
+        //var dist = distance(this.x, this.y, target.x, target.y);
+        // 万有斥力公式
+        // F = M1*M2 / (r*r) * G
+        // 这里计算加速度 所以约分去掉了本对象的质量
+        var force = target.mass / (dist*dist*dist) * G;
+        var g = new Acc(force);
+        //g.dir = this.calcRelativePos(target);
+        g.ax = - force * (target.x - this.x) / dist;
+        g.ay = - force * (target.y - this.y) / dist;
+        //console.log(g);
+        return g;
+    },
     calcGravityAll: function(particles) {
         var g = new Acc(0);
         //console.log(particles);
@@ -99,7 +115,7 @@ Orb.prototype = {
             // 距离太小将爆炸，并合并
             var dist = distance(this.x, this.y, target.x, target.y);
 
-            if (dist<1.0 || dist*dist < (target.vx*target.vx + target.vy*target.vy)*10) {
+            if (dist<0.2 || dist*dist < (target.vx*target.vx + target.vy*target.vy)*10) {
                 //console.log(dist);
                 if (this.mass > target.mass) {
                     //console.log('BIG:'+this.mass+' id:'+this.id);
@@ -136,6 +152,11 @@ Orb.prototype = {
                 }
             } else {
                 var gtmp = this.calcGravity(target, dist);
+                // 斥力计算 --start for exp
+                // var rtmp = this.calcRepulsion(target, dist);
+                // gtmp.ax += rtmp.ax
+                // gtmp.ay += rtmp.ay
+                // 斥力计算 --end for exp
                 //gtmp.parseXY();
                 //console.log(gtmp);
                 g.ax += gtmp.ax;
