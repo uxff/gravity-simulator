@@ -38,7 +38,7 @@ var arrangeType  = urlParam.get('arrangeType');
 window.onload = function () {
     window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
 
-    var c = document.getElementById("canvas-club");
+    let c = document.getElementById("canvas-club");
     w= c.width = window.innerWidth;
     h = c.height = window.innerHeight;
     ctx = c.getContext("2d");
@@ -58,9 +58,9 @@ window.onload = function () {
 
     initOrbs = function(num) {
         particles = [];
-        for (var i = 1; i <= num; i++) {
+        for (let i = 1; i <= num; i++) {
             //setTimeout(function() {
-                var p = new Orb();
+                let p = new Orb();
                 p.id = particles.length;
                 p.init();
                 p.mass = random(orbMinMass, orbMaxMass);
@@ -73,7 +73,7 @@ window.onload = function () {
                         p.y = Math.sin(tangle) * 300.0 + h/2.0;
                         break;
                     default:
-                        var tdir = Math.random()*2.0*Math.PI, trandom = Math.random();
+                        let tdir = Math.random()*2.0*Math.PI, trandom = Math.random();
                         p.vx = random(-orbMaxVelo, orbMaxVelo);// Math.sin(vdir) * orbMaxVelo;// 
                         p.vy = random(-orbMaxVelo, orbMaxVelo);//-Math.cos(vdir) * orbMaxVelo;// 
                         // 圆形区域分布
@@ -103,9 +103,9 @@ window.onload = function () {
     updateOrbs = function(nTimes) {
         nTimes = nTimes || calcTimes;
         
-        for (var k=0; k<nTimes; ++k) {
-            for (var i=0; i<particles.length-1; ++i) {
-                var p = particles[i];
+        for (let k=0; k<nTimes; ++k) {
+            for (let i=0; i<particles.length-1; ++i) {
+                let p = particles[i];
                 //console.log(i);
                 //if (p.id != ETERNAL_ID) {
                     //最后一颗恒星不计算位移,不移动
@@ -126,11 +126,11 @@ window.onload = function () {
         
         //mouse.move();
 
-        for (var i in particles) {
-            var p = particles[i];
+        for (let i in particles) {
+            let p = particles[i];
             p.draw(ctx);
             if (p.lifeStep==2) {
-                var bomb = new Bomb(p.x, p.y, p.hue);
+                let bomb = new Bomb(p.x, p.y, p.hue);
                 bomb.pid = p.id;
                 bomb.init();
                 bombs.push(bomb);
@@ -143,8 +143,8 @@ window.onload = function () {
         //ctx.closePath();
         //ctx.stroke();
         
-        for (var i in bombs) {
-            var b = bombs[i];
+        for (let i in bombs) {
+            let b = bombs[i];
             b.draw(ctx);
         }
         //ctx.closePath();
@@ -160,25 +160,26 @@ window.onload = function () {
         if (calcStep %20 == 19) {
             // 计算cps
             nowTimestamp = new Date().getTime();
-            var timeUsed = nowTimestamp - startTimestamp;
+            let timeUsed = nowTimestamp - startTimestamp;
             cps =  timesCalced/ (timeUsed/1000.0);
             document.getElementById('cps').innerHTML = cps.toFixed(2);
 
             timesCalced = 0;
             startTimestamp = nowTimestamp-1;
+			
         }
     }
 
     refreshPad = function() {
         // 清理多余的particles
-        for (var i=0; i<particles.length; ++i) {
+        for (let i=0; i<particles.length; ++i) {
             if (particles[i].lifeStep==3) {
                 particles.splice(i, 1);
                 --i;
             }
         }
         // 清理多余的爆炸碎屑
-        for (var i=0; i<bombs.length; ++i) {
+        for (let i=0; i<bombs.length; ++i) {
             if (bombs[i].lifetime>=bombs[i].maxLifetime) {
                 bombs.splice(i, 1);
                 --i;
