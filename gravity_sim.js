@@ -37,6 +37,7 @@ var arrangeType  = urlParam.get('arrangeType');
 
 window.onload = function () {
     window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
+	document.getElementById('constOfG').innerHTML = G;
 
     let c = document.getElementById("canvas-club");
     w= c.width = window.innerWidth;
